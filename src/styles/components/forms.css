@@ -1,0 +1,180 @@
+/**
+ * Form controls.
+ *
+ * Usage:
+ * <div class="form-group">
+ *   <label class="form-label" for="foo">Label</label>
+ *   <input id="foo" class="form-input">
+ *   <div class="form-hint">Helper text</div>
+ *   <div class="form-msg err show">Error message</div>
+ * </div>
+ */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sao-text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== Text inputs ===== */
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--sao-surface-3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--sao-radius-md);
+    color: var(--sao-text);
+    font-family: inherit;
+    font-size: 14px;
+    transition: all var(--sao-transition);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 140px;
+    line-height: 1.6;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--sao-border-accent-strong);
+    background: rgba(15, 20, 32, 0.85);
+}
+
+.form-input.error,
+.form-select.error,
+.form-textarea.error {
+    border-color: rgba(255, 107, 107, 0.6);
+}
+
+.form-input.success,
+.form-select.success,
+.form-textarea.success {
+    border-color: var(--sao-success-border);
+}
+
+/* ===== Select ===== */
+
+.form-select {
+    appearance: none;
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300d4ff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+}
+
+.form-select option {
+    background: #0f1420;
+    color: var(--sao-text);
+}
+
+/* ===== Helpers / messages ===== */
+
+.form-hint {
+    font-size: 12px;
+    color: var(--sao-text-faint);
+    margin-top: 6px;
+}
+
+.form-msg {
+    display: none;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.form-msg.show {
+    display: block;
+}
+
+.form-msg.err {
+    color: var(--sao-danger);
+}
+
+.form-msg.ok {
+    color: var(--sao-success);
+}
+
+/* ===== Input with trailing button (e.g. show-password toggle) ===== */
+
+.form-input-wrap {
+    position: relative;
+}
+
+.form-input-wrap .form-input {
+    padding-right: 44px;
+}
+
+.form-input-wrap .input-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--sao-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--sao-radius-sm);
+    transition: color var(--sao-transition);
+}
+
+.form-input-wrap .input-toggle:hover {
+    color: var(--sao-primary);
+}
+
+/* ===== Checkbox / radio ===== */
+
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    color: var(--sao-text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+    user-select: none;
+}
+
+.form-check input[type="checkbox"],
+.form-check input[type="radio"] {
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--sao-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

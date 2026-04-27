@@ -1,0 +1,185 @@
+/**
+ * 404 page specific styles.
+ *
+ * Centered full-viewport layout with a large glitching "404", localised
+ * title/subtitle and two action buttons. Relies on shared tokens from
+ * `variables.css` and the lang-switcher component.
+ */
+
+body.page-notfound {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px 40px;
+    overflow: hidden;
+    position: relative;
+}
+
+body.page-notfound::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 50% 20%, rgba(0, 212, 255, 0.12), transparent 60%),
+        radial-gradient(ellipse at 50% 80%, rgba(0, 120, 255, 0.08), transparent 65%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.notfound-container {
+    max-width: 620px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+/* ===== Giant "404" number ===== */
+
+.notfound-code {
+    font-family: var(--sao-font-display);
+    font-size: clamp(140px, 22vw, 240px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -4px;
+    background: linear-gradient(180deg,
+        rgba(0, 212, 255, 0.25) 0%,
+        rgba(0, 212, 255, 0.05) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: -40px;
+    user-select: none;
+}
+
+/* ===== Glitching overlay "404" ===== */
+
+.notfound-glitch {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+    line-height: 1;
+}
+
+.notfound-glitch-layer {
+    font-family: var(--sao-font-display);
+    font-size: clamp(44px, 7vw, 72px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: var(--sao-primary);
+    text-shadow: 0 0 28px rgba(0, 212, 255, 0.55);
+    display: inline-block;
+}
+
+.notfound-glitch-layer:nth-child(2) {
+    position: absolute;
+    inset: 0;
+    color: #ff3a7a;
+    mix-blend-mode: screen;
+    opacity: 0.7;
+    animation: notfoundGlitch 2.8s infinite steps(1);
+}
+
+@keyframes notfoundGlitch {
+    0%, 92%, 100% { transform: translate(0, 0); opacity: 0; }
+    93% { transform: translate(-2px, 1px); opacity: 0.7; }
+    94% { transform: translate(2px, -1px); opacity: 0.7; }
+    95% { transform: translate(-1px, 2px); opacity: 0.7; }
+    96% { transform: translate(1px, -2px); opacity: 0.7; }
+    97% { transform: translate(0, 0); opacity: 0.7; }
+}
+
+.no-anim .notfound-glitch-layer:nth-child(2) {
+    animation: none;
+    opacity: 0;
+}
+
+/* ===== Title + subtitle ===== */
+
+.notfound-title {
+    font-family: var(--sao-font-display);
+    font-size: clamp(22px, 4vw, 32px);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #fff 0%, var(--sao-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+}
+
+.notfound-subtitle {
+    font-size: 15px;
+    color: var(--sao-text-dim);
+    line-height: 1.65;
+    max-width: 480px;
+    margin: 0 auto 36px;
+}
+
+/* ===== Actions ===== */
+
+.notfound-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.notfound-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 0 28px;
+    font-family: var(--sao-font-display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: var(--sao-radius-md);
+    transition: all var(--sao-transition);
+    cursor: pointer;
+}
+
+.notfound-btn--primary {
+    color: var(--sao-text);
+    background: var(--sao-gradient);
+    border: none;
+    box-shadow: 0 8px 24px rgba(0, 212, 255, 0.25);
+}
+
+.notfound-btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 212, 255, 0.45);
+    text-decoration: none;
+}
+
+.notfound-btn--ghost {
+    color: var(--sao-text-dim);
+    background: var(--sao-surface-dropdown);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.notfound-btn--ghost:hover {
+    color: var(--sao-primary);
+    border-color: rgba(0, 212, 255, 0.55);
+    text-decoration: none;
+}
+
+/* ===== Small screens ===== */
+
+@media (max-width: 540px) {
+    .notfound-code {
+        margin-bottom: -28px;
+    }
+
+    .notfound-actions {
+        flex-direction: column;
+    }
+
+    .notfound-btn {
+        width: 100%;
+    }
+}

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мастера Меча Онлайн | Sword Art Online</title>
+    <meta name="description" content="Sword Art Online — браузерная MMORPG с форумом, поддержкой, новостями и аккаунтом игрока. Играйте прямо в браузере и следите за запуском проекта.">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Pre-render anim guard + entry overlay skip -->
+    <script src="/preload-prefs.js"></script>
+
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/home.css">
+</head>
+<body class="page-home">
+
+<!-- ENTRY OVERLAY (audio consent gate) -->
+<div class="entry-overlay" id="entry-overlay">
+    <div class="entry-content">
+        <div class="entry-logo">SAO</div>
+        <h1 class="entry-title" data-i18n="title">Sword Art Online</h1>
+        <p class="entry-subtitle" data-i18n="entrySubtitle">Браузерная MMORPG - играйте прямо в браузере</p>
+        <button class="entry-btn" id="entry-btn" type="button" data-i18n="entryBtn">Войти в игру</button>
+        <p class="entry-hint" data-i18n="entryHint">Нажмите чтобы включить звук</p>
+    </div>
+</div>
+
+<!-- HEADER -->
+<header class="home-header">
+    <div class="header-inner">
+        <a href="index.html" class="home-logo" id="home-logo">
+            <div class="home-logo-icon">SAO</div>
+            Sword Art Online
+        </a>
+        <nav class="home-nav" id="main-nav">
+            <a href="https://dsc.gg/sao-web" target="_blank" rel="noopener" data-i18n="nav.0">Discord</a>
+            <a href="forum.html" data-i18n="nav.1">Форум</a>
+            <a href="support.html" data-i18n="nav.2">Поддержка</a>
+            <a href="login.html" class="btn-login" id="nav-login-btn" data-i18n="nav.3">Войти</a>
+            <div class="user-menu" id="user-menu">
+                <button class="user-btn" id="user-btn" type="button">
+                    <span class="user-avatar" id="user-avatar"></span>
+                    <span class="user-name" id="user-name"></span>
+                </button>
+                <div class="user-dropdown">
+                    <div class="user-dropdown-header">
+                        <div class="user-dropdown-email" id="user-dropdown-email"></div>
+                    </div>
+                    <a href="my-tickets.html" class="user-dropdown-item" id="my-tickets-link">
+                        <span>🎫</span> <span data-i18n="myTickets">Мои тикеты</span>
+                    </a>
+                    <a href="admin-tickets.html" class="user-dropdown-item" id="admin-tickets-link" hidden>
+                        <span>🛠️</span> <span data-i18n="adminTickets">Тикеты поддержки</span>
+                    </a>
+                    <a href="settings.html" class="user-dropdown-item">
+                        <span>⚙️</span> <span data-i18n="settings">Настройки</span>
+                    </a>
+                    <button class="user-dropdown-item logout" id="logout-btn" type="button">
+                        <span>🚪</span> <span data-i18n="logout">Выйти</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div class="home-lang-switcher" id="lang-switcher">
+            <button class="home-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+                <span id="current-lang">RU</span>
+                <span class="arrow">▼</span>
+            </button>
+            <div class="home-lang-dropdown" id="lang-dropdown">
+                <a href="#" class="active" data-lang="RU">RU - Русский</a>
+                <a href="#" data-lang="EN">EN - English</a>
+                <a href="#" data-lang="DE">DE - Deutsch</a>
+                <a href="#" data-lang="FR">FR - Français</a>
+                <a href="#" data-lang="PL">PL - Polski</a>
+                <a href="#" data-lang="ES">ES - Español</a>
+                <a href="#" data-lang="CZ">CZ - Čeština</a>
+                <a href="#" data-lang="IT">IT - Italiano</a>
+            </div>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Открыть или закрыть меню" data-i18n="menuToggleLabel" data-i18n-attr="aria-label">☰</button>
+    </div>
+</header>
+
+<!-- FULLPAGE CONTAINER -->
+<div class="fullpage-wrapper">
+    <div class="fullpage-container" id="fullpage-container">
+
+        <!-- HERO -->
+        <section class="hero fp-section" data-section="0">
+            <video class="hero-video" id="hero-video" autoplay muted loop playsinline preload="none" aria-hidden="true">
+                <source data-src="background.mp4" type="video/mp4">
+            </video>
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <div class="hero-badge" data-i18n="badge">Браузерная MMORPG</div>
+                <h1 class="hero-title" data-i18n="title">Мастера Меча Онлайн</h1>
+                <div class="hero-buttons">
+                    <a href="register.html" class="btn-play" id="play-now-cta" data-i18n="buttons.0">Играть сейчас</a>
+                    <a href="news.html" class="btn-secondary-home" data-i18n="buttons.1">Новости</a>
+                    <a href="forum.html" class="btn-secondary-home" data-i18n="buttons.2">Форум</a>
+                </div>
+            </div>
+            <button class="hero-scroll-hint" id="scroll-hint" type="button" data-i18n="scrollHint">Узнать больше</button>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="about fp-section" data-section="1">
+            <video class="about-video" autoplay muted playsinline preload="none" id="about-video" aria-hidden="true">
+                <source data-src="background2.mp4" type="video/mp4">
+            </video>
+            <div class="about-video-overlay"></div>
+            <button class="sound-toggle" id="sound-toggle" type="button" title="Включить или выключить звук" aria-label="Включить или выключить звук">
+                <span id="sound-icon">🔇</span>
+            </button>
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2 data-i18n="aboutTitle">Об игре</h2>
+                    <p data-i18n="aboutP1">Главный герой - один из участников необычной игры, - оказался запертым в виртуальном мире. Вокруг него бродят толпы свирепых монстров. Смерть здесь - это гибель в реальности, где осталось его настоящее тело, подключенное к компьютеру.</p>
+                    <p data-i18n="aboutP2">А выбраться отсюда можно только одним способом - пройдя 100 этажей и убив основного босса, обладающего невероятной силой!</p>
+                    <p data-i18n="aboutP3">Прокачивайтесь в любом месте и в любое время, ведь эта игра прекрасно работает и смотрится как на компьютере, так и на мобильном устройстве! Герой сам исследует мир и сражается, поэтому управление здесь очень удобное даже на экране смартфона!</p>
+                </div>
+                <div class="about-visual">
+                    <div class="about-card">
+                        <img src="100_floor.png" alt="Живой открытый мир" class="about-card-img" width="1024" height="768" loading="lazy" decoding="async">
+                        <div class="about-card-content">
+                            <span data-i18n="aboutCard1">Живой открытый мир</span>
+                            <span class="sub-span" data-i18n="aboutCard2">БЕСКОНЕЧНЫЙ ПРОГРЕСС</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section class="features-section fp-section" data-section="2">
+            <video class="features-video" id="features-video" autoplay muted loop playsinline preload="none" aria-hidden="true">
+                <source data-src="background3.mp4" type="video/mp4">
+            </video>
+            <div class="features-video-overlay"></div>
+            <div class="features-content">
+                <h2 class="features-title" data-i18n="featuresTitle">Особенности игры</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-img-wrapper">
+                            <img src="Storyline.png" alt="Сюжет" class="feature-img" width="1024" height="384" loading="lazy" decoding="async">
+                            <div class="feature-img-overlay">
+                                <div class="overlay-title" data-i18n="f1Title">Глубокий мир и сюжет</div>
+                                <p class="overlay-desc" data-i18n="f1Desc">Обширные локации, тысячи квестов и многоуровневая сюжетная линия. Каждый выбор влияет на судьбу вашего героя и формирует уникальный игровой опыт.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-img-wrapper">
+                            <img src="Crossplatform.png" alt="Кроссплатформенность" class="feature-img" width="1024" height="384" loading="lazy" decoding="async">
+                            <div class="feature-img-overlay">
+                                <div class="overlay-title" data-i18n="f2Title">Кроссплатформенность</div>
+                                <p class="overlay-desc" data-i18n="f2Desc">Играйте где угодно - проект прекрасно оптимизирован и одинаково хорошо смотрится как на большом экране ПК, так и на смартфоне!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-img-wrapper">
+                            <img src="Dynamic_Gameplay.png" alt="Геймплей" class="feature-img" width="1024" height="384" loading="lazy" decoding="async">
+                            <div class="feature-img-overlay">
+                                <div class="overlay-title" data-i18n="f3Title">Взрывной геймплей</div>
+                                <p class="overlay-desc" data-i18n="f3Desc">Динамичные бои с удобным автобоем. Повышайте мощь, меняйте экипировку и используйте мощные умения даже на ходу!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-img-wrapper">
+                            <img src="feature_heroes.png" alt="Герои" class="feature-img" width="1024" height="384" loading="lazy" decoding="async">
+                            <div class="feature-img-overlay">
+                                <div class="overlay-title" data-i18n="f4Title">Верные спутники</div>
+                                <p class="overlay-desc" data-i18n="f4Desc">Собирайте команду из сильных напарников, прокачивайте их способности и создавайте непобедимые боевые составы.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-img-wrapper">
+                            <img src="Epic_Bosses.png" alt="Боссы" class="feature-img" width="1024" height="576" loading="lazy" decoding="async">
+                            <div class="feature-img-overlay">
+                                <div class="overlay-title" data-i18n="f5Title">Эпические боссы</div>
+                                <p class="overlay-desc" data-i18n="f5Desc">Бросайте вызов невероятно сильным противникам. Используйте тактику, плавку и ковку вещей, чтобы одержать победу!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-img-wrapper">
+                            <img src="PvP.png" alt="PvP" class="feature-img" width="1024" height="768" loading="lazy" decoding="async">
+                            <div class="feature-img-overlay">
+                                <div class="overlay-title" data-i18n="f6Title">PvP и Кланы</div>
+                                <p class="overlay-desc" data-i18n="f6Desc">Создавайте могущественные гильдии, объединяйтесь с друзьями и сражайтесь на аренах за звание сильнейшего бойца сервера!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="home-footer">
+                <div class="home-footer-inner">
+                    <div class="home-footer-bottom">
+                        <!-- Populated dynamically from home.ts (contains links) -->
+                        <div class="home-footer-copy" id="footer-copy"></div>
+                    </div>
+                </div>
+            </footer>
+        </section>
+
+    </div>
+</div>
+
+<!-- Waitlist modal (shown when "Play Now" is clicked while the game is in development) -->
+<div class="modal-backdrop" id="waitlist-modal" role="dialog" aria-modal="true" aria-labelledby="waitlist-title">
+    <div class="modal">
+        <!-- Form view -->
+        <div id="waitlist-form-view">
+            <h3 class="modal-title" id="waitlist-title" data-i18n="waitlistTitle">Открытая бета скоро!</h3>
+            <p class="modal-body" data-i18n="waitlistDesc" data-i18n-html="true">Игра пока в разработке. Оставьте email и мы первыми сообщим вам, как только сервер запустится.</p>
+            <form id="waitlist-form" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="waitlist-email" data-i18n="waitlistEmailLabel">Ваш email</label>
+                    <input type="email" id="waitlist-email" class="form-input" autocomplete="email" required data-i18n-ph="waitlistEmailPh" placeholder="you@example.com">
+                    <div class="form-msg err" id="waitlist-error"></div>
+                </div>
+                <p class="form-hint" data-i18n="waitlistNote">Никакого спама. Только одно письмо: когда откроем серверы.</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="waitlist-cancel" data-i18n="waitlistCancel">Позже</button>
+                    <button type="submit" class="btn btn-primary" id="waitlist-submit" data-i18n="waitlistSubmit">Напишите мне когда запуститесь</button>
+                </div>
+            </form>
+        </div>
+        <!-- Success view -->
+        <div id="waitlist-success-view" hidden>
+            <h3 class="modal-title" data-i18n="waitlistSuccessTitle">Спасибо!</h3>
+            <p class="modal-body" id="waitlist-success-msg"></p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" id="waitlist-close" data-i18n="waitlistClose">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="/src/pages/home.ts"></script>
+
+</body>
+</html>

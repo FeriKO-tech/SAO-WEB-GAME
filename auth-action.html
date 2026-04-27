@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Подтверждение | Sword Art Online</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="/preload-prefs.js"></script>
+
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/login.css">
+    <link rel="stylesheet" href="/src/styles/pages/auth-action.css">
+</head>
+<body class="page-auth">
+
+<a href="index.html" class="back-link"><span data-i18n="back">← На главную</span></a>
+
+<div class="sao-lang-switcher fixed" id="lang-switcher">
+    <button class="sao-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+        <span id="current-lang">RU</span>
+        <span class="arrow">▼</span>
+    </button>
+    <div class="sao-lang-dropdown" id="lang-dropdown">
+        <a href="#" class="active" data-lang="RU">RU - Русский</a>
+        <a href="#" data-lang="EN">EN - English</a>
+        <a href="#" data-lang="DE">DE - Deutsch</a>
+        <a href="#" data-lang="FR">FR - Français</a>
+        <a href="#" data-lang="PL">PL - Polski</a>
+        <a href="#" data-lang="ES">ES - Español</a>
+        <a href="#" data-lang="CZ">CZ - Čeština</a>
+        <a href="#" data-lang="IT">IT - Italiano</a>
+    </div>
+</div>
+
+<div class="login-container" id="action-container">
+
+    <!-- Loading state (shown while verifying oobCode) -->
+    <div class="action-view" id="view-loading">
+        <div class="logo-block">
+            <div class="logo-icon">SAO</div>
+            <div class="auth-spinner" aria-hidden="true"></div>
+            <h1 class="form-title" data-i18n="loadingTitle">Проверка ссылки</h1>
+            <p class="form-subtitle" data-i18n="loadingSub">Подождите секунду…</p>
+        </div>
+    </div>
+
+    <!-- Reset Password form -->
+    <div class="action-view" id="view-reset-form" hidden>
+        <div class="logo-block">
+            <div class="logo-icon">SAO</div>
+            <h1 class="form-title" data-i18n="resetTitle">Новый пароль</h1>
+            <p class="form-subtitle">
+                <span data-i18n="resetSub">Для аккаунта</span>
+                <strong id="reset-email"></strong>
+            </p>
+        </div>
+
+        <form id="reset-form" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="new-password" data-i18n="passwordLabel">Новый пароль</label>
+                <input type="password" id="new-password" class="form-input"
+                       placeholder="Минимум 6 символов"
+                       data-i18n="passwordPh" data-i18n-attr="placeholder"
+                       autocomplete="new-password" required minlength="6">
+                <div class="password-strength" id="password-strength">
+                    <div class="strength-bars">
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                    </div>
+                    <div class="strength-label">
+                        <span class="strength-label-text" id="strength-text"></span>
+                        <span class="strength-hint" id="strength-hint"></span>
+                    </div>
+                </div>
+                <div class="form-error" data-for="new-password" data-i18n="passwordErr">Пароль должен быть минимум 6 символов</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirm-password" data-i18n="confirmLabel">Повторите пароль</label>
+                <input type="password" id="confirm-password" class="form-input"
+                       placeholder="Повторите пароль"
+                       data-i18n="confirmPh" data-i18n-attr="placeholder"
+                       autocomplete="new-password" required>
+                <div class="match-indicator" id="match-indicator">
+                    <span id="match-text"></span>
+                </div>
+                <div class="form-error" data-for="confirm-password" data-i18n="confirmErr">Пароли не совпадают</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="reset-submit" data-i18n="resetSubmit">Сменить пароль</button>
+        </form>
+    </div>
+
+    <!-- Success state (shared between reset, verify, recover) -->
+    <div class="action-view" id="view-success" hidden>
+        <div class="success-icon">✓</div>
+        <h2 class="success-title" id="success-title" data-i18n="resetSuccessTitle">Пароль изменён</h2>
+        <p class="success-message" id="success-msg" data-i18n="resetSuccessMsg">Теперь вы можете войти с новым паролем.</p>
+        <a href="login.html" class="submit-btn submit-btn--link" id="success-cta" data-i18n="toLogin">Войти в игру</a>
+    </div>
+
+    <!-- Error state -->
+    <div class="action-view" id="view-error" hidden>
+        <div class="error-icon">!</div>
+        <h2 class="error-title" id="error-title" data-i18n="errorTitle">Ссылка недействительна</h2>
+        <p class="error-message" id="error-msg" data-i18n="errorInvalid">Ссылка истекла или уже была использована. Запросите новую.</p>
+        <div class="error-actions">
+            <a href="login.html" class="submit-btn submit-btn--link" data-i18n="toLogin">Войти в игру</a>
+            <a href="index.html" class="submit-btn submit-btn--ghost" data-i18n="toHome">На главную</a>
+        </div>
+    </div>
+
+</div>
+
+<div id="toast-container" class="sao-toast-container" aria-live="polite"></div>
+
+<script type="module" src="/src/pages/auth-action.ts"></script>
+
+</body>
+</html>

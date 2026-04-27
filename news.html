@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новости | Sword Art Online</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Pre-render guard: apply no-anim before first paint. Must run sync. -->
+    <script src="/preload-prefs.js"></script>
+
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/news.css">
+</head>
+<body class="page-news">
+
+<a href="index.html" class="back-link" data-i18n="back">← На главную</a>
+
+<div class="sao-lang-switcher fixed" id="lang-switcher">
+    <button class="sao-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+        <span id="current-lang">RU</span>
+        <span class="arrow">▼</span>
+    </button>
+    <div class="sao-lang-dropdown" id="lang-dropdown">
+        <a href="#" class="active" data-lang="RU">RU - Русский</a>
+        <a href="#" data-lang="EN">EN - English</a>
+        <a href="#" data-lang="DE">DE - Deutsch</a>
+        <a href="#" data-lang="FR">FR - Français</a>
+        <a href="#" data-lang="PL">PL - Polski</a>
+        <a href="#" data-lang="ES">ES - Español</a>
+        <a href="#" data-lang="CZ">CZ - Čeština</a>
+        <a href="#" data-lang="IT">IT - Italiano</a>
+    </div>
+</div>
+
+<div class="page-container">
+    <header class="page-header">
+        <div class="logo-icon">SAO</div>
+        <div class="page-header-content">
+            <div class="page-header-text">
+                <h1 class="page-title" data-i18n="title">Новости</h1>
+                <p class="page-subtitle" data-i18n="subtitle">Свежие обновления, события и анонсы игры.</p>
+            </div>
+            <div class="admin-actions">
+                <button type="button" id="create-news-btn" class="btn btn-primary" hidden data-i18n="createNews">Создать новость</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Category filters -->
+    <div class="news-filters" id="news-filters" role="tablist" aria-label="Фильтры" data-i18n="filtersLabel" data-i18n-attr="aria-label">
+        <button type="button" class="news-filter active" role="tab" aria-selected="true" data-filter="all" data-i18n="catAll">Все</button>
+        <button type="button" class="news-filter" role="tab" aria-selected="false" data-filter="catUpdates" data-i18n="catUpdates">Обновления</button>
+        <button type="button" class="news-filter" role="tab" aria-selected="false" data-filter="catEvents" data-i18n="catEvents">События</button>
+        <button type="button" class="news-filter" role="tab" aria-selected="false" data-filter="catContests" data-i18n="catContests">Конкурсы</button>
+        <button type="button" class="news-filter" role="tab" aria-selected="false" data-filter="catAnnouncements" data-i18n="catAnnouncements">Анонсы</button>
+    </div>
+
+    <!-- Featured post (populated by news.ts) -->
+    <article id="news-featured" class="news-featured" hidden></article>
+
+    <!-- Regular grid (populated by news.ts) -->
+    <div id="news-grid" class="news-grid" aria-live="polite"></div>
+
+    <!-- Empty state (shown by news.ts when grid is empty) -->
+    <div id="news-empty" class="news-empty" hidden>
+        <div class="news-empty-icon">∅</div>
+        <h3 class="news-empty-title" data-i18n="emptyTitle">Нет новостей в этой категории</h3>
+        <p class="news-empty-desc" data-i18n="emptyDesc">Выберите другую категорию или вернитесь позже.</p>
+    </div>
+</div>
+
+<div id="toast-container" class="sao-toast-container" aria-live="polite"></div>
+
+<!-- News Editor Modal -->
+<div id="news-editor-modal" class="modal-overlay" hidden>
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title" data-i18n="createNews">Создать новость</h2>
+            <button type="button" class="modal-close" id="news-editor-close" aria-label="Закрыть">&times;</button>
+        </div>
+        
+        <form id="news-editor-form" class="modal-form">
+            <div class="modal-form-content">
+                <div class="form-main-col">
+                    <div class="form-group">
+                        <label for="news-title" class="form-label" data-i18n="newsTitle">Заголовок</label>
+                        <input type="text" id="news-title" name="title" class="form-input" maxlength="200" required placeholder="Введите заголовок новости...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="news-excerpt" class="form-label" data-i18n="newsExcerpt">Краткое описание</label>
+                        <textarea id="news-excerpt" name="excerpt" class="form-textarea" maxlength="300" rows="3" required placeholder="Краткое содержание для карточки новости (до 300 символов)"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="news-content" class="form-label" data-i18n="newsContent">Содержание</label>
+                        <textarea id="news-content" name="content" class="form-textarea" maxlength="10000" rows="15" required placeholder="Полный текст новости. Поддерживается Markdown или HTML-разметка."></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-side-col">
+                    <div class="form-group" style="display: none;">
+                        <label for="news-slug" class="form-label" data-i18n="newsSlug">URL-идентификатор</label>
+                        <input type="text" id="news-slug" name="slug" class="form-input" maxlength="200" pattern="[a-z0-9-]+">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="news-category-trigger" class="form-label" data-i18n="newsCategory">Категория</label>
+                        <input type="hidden" id="news-category" name="category" value="catAnnouncements">
+                        <div class="admin-dropdown" data-dropdown-name="category">
+                            <button type="button" id="news-category-trigger" class="admin-dropdown-btn" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="admin-dropdown-current" data-dropdown-current data-i18n="catAnnouncements">Анонсы</span>
+                                <span class="admin-dropdown-arrow">▼</span>
+                            </button>
+                            <div class="admin-dropdown-menu" role="listbox">
+                                <button type="button" class="admin-dropdown-option active" data-value="catAnnouncements" role="option" aria-selected="true" data-i18n="catAnnouncements">Анонсы</button>
+                                <button type="button" class="admin-dropdown-option" data-value="catUpdates" role="option" aria-selected="false" data-i18n="catUpdates">Обновления</button>
+                                <button type="button" class="admin-dropdown-option" data-value="catEvents" role="option" aria-selected="false" data-i18n="catEvents">События</button>
+                                <button type="button" class="admin-dropdown-option" data-value="catContests" role="option" aria-selected="false" data-i18n="catContests">Конкурсы</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="news-image" class="form-label" data-i18n="newsImage">Обложка (Картинка)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="news-image" name="imageFile" class="form-input-file" accept="image/jpeg, image/png, image/webp" required>
+                            <div class="file-upload-preview" id="news-image-preview">
+                                <span class="file-upload-text">Нажмите, чтобы выбрать картинку</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="news-tags" class="form-label" data-i18n="newsTags">Теги</label>
+                        <input type="text" id="news-tags" name="tags" class="form-input" placeholder="patch, event, system...">
+                        <small class="form-hint" data-i18n="newsTagsHint">До 10 тегов через запятую</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="news-lang-trigger" class="form-label" data-i18n="newsLang">Язык публикации</label>
+                        <input type="hidden" id="news-lang" name="lang" value="ru">
+                        <div class="admin-dropdown" data-dropdown-name="lang">
+                            <button type="button" id="news-lang-trigger" class="admin-dropdown-btn" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="admin-dropdown-current" data-dropdown-current>RU - Русский</span>
+                                <span class="admin-dropdown-arrow">▼</span>
+                            </button>
+                            <div class="admin-dropdown-menu" role="listbox">
+                                <button type="button" class="admin-dropdown-option active" data-value="ru" role="option" aria-selected="true">RU - Русский</button>
+                                <button type="button" class="admin-dropdown-option" data-value="en" role="option" aria-selected="false">EN - English</button>
+                                <button type="button" class="admin-dropdown-option" data-value="de" role="option" aria-selected="false">DE - Deutsch</button>
+                                <button type="button" class="admin-dropdown-option" data-value="fr" role="option" aria-selected="false">FR - Français</button>
+                                <button type="button" class="admin-dropdown-option" data-value="pl" role="option" aria-selected="false">PL - Polski</button>
+                                <button type="button" class="admin-dropdown-option" data-value="es" role="option" aria-selected="false">ES - Español</button>
+                                <button type="button" class="admin-dropdown-option" data-value="cz" role="option" aria-selected="false">CZ - Čeština</button>
+                                <button type="button" class="admin-dropdown-option" data-value="it" role="option" aria-selected="false">IT - Italiano</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 32px;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="news-featured" name="featured" class="checkbox-input">
+                            <span class="checkbox-text" data-i18n="newsFeatured">🌟 Закрепить новость</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="news-editor-cancel" data-i18n="cancel">Отмена</button>
+                <button type="submit" class="btn btn-primary" data-i18n="save">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module" src="/src/pages/news.ts"></script>
+</body>
+</html>

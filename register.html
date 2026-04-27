@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | Sword Art Online</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Pre-render guard: apply "no-anim" class before first paint so disabled
+         animations don't flash. Kept inline because it must run synchronously
+         before the stylesheet paints. -->
+    <script src="/preload-prefs.js"></script>
+
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/register.css">
+</head>
+<body class="page-auth">
+
+<a href="index.html" class="back-link"><span data-i18n="back">← На главную</span></a>
+
+<div class="sao-lang-switcher fixed" id="lang-switcher">
+    <button class="sao-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+        <span id="current-lang">RU</span>
+        <span class="arrow">▼</span>
+    </button>
+    <div class="sao-lang-dropdown" id="lang-dropdown">
+        <a href="#" class="active" data-lang="RU">RU - Русский</a>
+        <a href="#" data-lang="EN">EN - English</a>
+        <a href="#" data-lang="DE">DE - Deutsch</a>
+        <a href="#" data-lang="FR">FR - Français</a>
+        <a href="#" data-lang="PL">PL - Polski</a>
+        <a href="#" data-lang="ES">ES - Español</a>
+        <a href="#" data-lang="CZ">CZ - Čeština</a>
+        <a href="#" data-lang="IT">IT - Italiano</a>
+    </div>
+</div>
+
+<div class="register-container" id="register-container">
+    <!-- Form view -->
+    <div class="form-view">
+        <div class="logo-block">
+            <div class="logo-icon">SAO</div>
+            <h1 class="form-title" data-i18n="title">Регистрация</h1>
+            <p class="form-subtitle" data-i18n="subtitle">Создайте аккаунт и погрузитесь в мир SAO</p>
+        </div>
+
+        <div class="social-buttons">
+            <button type="button" class="social-btn" id="google-btn">
+                <span class="icon" aria-hidden="true">G</span>
+                <span data-i18n="googleButton">Продолжить с Google</span>
+            </button>
+        </div>
+
+        <div class="divider" data-i18n="orContinueWith">Или продолжите через</div>
+
+        <form id="register-form" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="username" data-i18n="loginLabel">Логин</label>
+                <input type="text" id="username" class="form-input"
+                       placeholder="Введите имя персонажа"
+                       data-i18n="loginPh" data-i18n-attr="placeholder"
+                       autocomplete="username" required minlength="3" maxlength="20">
+                <div class="match-indicator" id="username-indicator">
+                    <span id="username-text"></span>
+                </div>
+                <div class="form-error" data-for="username" data-i18n="loginErr">Логин должен быть от 3 до 20 символов</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email" data-i18n="emailLabel">Email</label>
+                <input type="email" id="email" class="form-input"
+                       placeholder="your@email.com"
+                       data-i18n="emailPh" data-i18n-attr="placeholder"
+                       autocomplete="email" required>
+                <div class="match-indicator" id="email-indicator">
+                    <span id="email-text"></span>
+                </div>
+                <div class="form-error" data-for="email" data-i18n="emailErr">Введите корректный email</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password" data-i18n="passwordLabel">Пароль</label>
+                <input type="password" id="password" class="form-input"
+                       placeholder="Минимум 6 символов"
+                       data-i18n="passwordPh" data-i18n-attr="placeholder"
+                       autocomplete="new-password" required minlength="6">
+                <div class="password-strength" id="password-strength">
+                    <div class="strength-bars">
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                    </div>
+                    <div class="strength-label">
+                        <span class="strength-label-text" id="strength-text"></span>
+                        <span class="strength-hint" id="strength-hint"></span>
+                    </div>
+                </div>
+                <div class="form-error" data-for="password" data-i18n="passwordErr">Пароль должен быть минимум 6 символов</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password-confirm" data-i18n="confirmLabel">Повторите пароль</label>
+                <input type="password" id="password-confirm" class="form-input"
+                       placeholder="Повторите пароль"
+                       data-i18n="confirmPh" data-i18n-attr="placeholder"
+                       autocomplete="new-password" required>
+                <div class="match-indicator" id="match-indicator">
+                    <span id="match-text"></span>
+                </div>
+                <div class="form-error" data-for="password-confirm" data-i18n="confirmErr">Пароли не совпадают</div>
+            </div>
+
+            <label class="form-checkbox">
+                <input type="checkbox" id="agree" required>
+                <!-- `agree` contains inline <a> links; rendered by register.ts via innerHTML -->
+                <span id="agree-text"></span>
+            </label>
+
+            <button type="submit" class="submit-btn" id="submit-btn" data-i18n="submit">Создать аккаунт</button>
+
+            <div class="form-footer">
+                <span data-i18n="haveAccount">Уже есть аккаунт?</span>
+                <a href="login.html" data-i18n="loginLink">Войти</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success view -->
+    <div class="success-view" id="success-view">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title" data-i18n="successTitle">Добро пожаловать!</h2>
+        <p class="success-message" data-i18n="successMsg1">Регистрация успешно завершена.</p>
+        <p class="success-message" data-i18n="successMsg2">Возвращаем на главную страницу...</p>
+        <p class="countdown" id="countdown">3</p>
+    </div>
+</div>
+
+<script type="module" src="/src/pages/register.ts"></script>
+
+</body>
+</html>

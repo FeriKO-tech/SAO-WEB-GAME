@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки | Sword Art Online</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Pre-render guard: apply "no-anim" before first paint. Kept inline because
+         it must run synchronously before the stylesheet is parsed. -->
+    <script src="/preload-prefs.js"></script>
+
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/settings.css">
+</head>
+<body class="page-settings">
+
+<a href="index.html" class="back-link" data-i18n="back">← На главную</a>
+
+<div class="sao-lang-switcher fixed" id="lang-switcher">
+    <button class="sao-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+        <span id="current-lang">RU</span>
+        <span class="arrow">▼</span>
+    </button>
+    <div class="sao-lang-dropdown" id="lang-dropdown">
+        <a href="#" class="active" data-lang="RU">RU - Русский</a>
+        <a href="#" data-lang="EN">EN - English</a>
+        <a href="#" data-lang="DE">DE - Deutsch</a>
+        <a href="#" data-lang="FR">FR - Français</a>
+        <a href="#" data-lang="PL">PL - Polski</a>
+        <a href="#" data-lang="ES">ES - Español</a>
+        <a href="#" data-lang="CZ">CZ - Čeština</a>
+        <a href="#" data-lang="IT">IT - Italiano</a>
+    </div>
+</div>
+
+<!-- Delete account confirmation modal -->
+<div class="modal-backdrop" id="delete-modal">
+    <div class="modal">
+        <h3 data-i18n="deleteTitle">Удалить аккаунт?</h3>
+        <p data-i18n="deleteWarn">Это действие необратимо. Весь ваш прогресс, инвентарь и достижения будут безвозвратно удалены.</p>
+        <div class="form-group">
+            <label class="form-label" for="delete-confirm-input" data-i18n="deleteConfirmLabel">Для подтверждения введите свой логин</label>
+            <input type="text" class="form-input" id="delete-confirm-input" autocomplete="off">
+        </div>
+        <div class="form-group" id="delete-password-row">
+            <label class="form-label" for="delete-password-input" data-i18n="currentPwLabel">Текущий пароль</label>
+            <input type="password" class="form-input" id="delete-password-input" autocomplete="current-password">
+        </div>
+        <div class="form-msg" id="delete-modal-msg"></div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" id="delete-cancel" data-i18n="cancel">Отмена</button>
+            <button class="btn btn-danger" id="delete-confirm" disabled data-i18n="deleteBtn">Удалить навсегда</button>
+        </div>
+    </div>
+</div>
+
+<!-- Email change confirmation modal (asks for current password) -->
+<div class="modal-backdrop" id="email-modal" role="dialog" aria-modal="true" aria-labelledby="email-modal-title">
+    <div class="modal">
+        <h3 class="modal-title" id="email-modal-title" data-i18n="emailChangeTitle">Подтвердите смену email</h3>
+        <p class="modal-body" data-i18n="emailChangeDesc">
+            Мы отправим письмо на новый адрес. Email сменится только после клика по ссылке в письме. Подтвердите текущий пароль, чтобы продолжить.
+        </p>
+        <div class="form-group">
+            <label class="form-label" for="email-modal-pw" data-i18n="currentPwLabel">Текущий пароль</label>
+            <input type="password" class="form-input" id="email-modal-pw" autocomplete="current-password">
+            <div class="form-msg" id="email-modal-msg"></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" id="email-modal-cancel" data-i18n="cancel">Отмена</button>
+            <button class="btn btn-primary" id="email-modal-submit" data-i18n="emailChangeSubmit">Отправить письмо</button>
+        </div>
+    </div>
+</div>
+
+<div class="page-container">
+    <div class="page-header">
+        <div class="logo-icon">SAO</div>
+        <h1 class="page-title" data-i18n="title">Настройки</h1>
+    </div>
+
+    <div class="settings-grid">
+        <!-- Sidebar nav -->
+        <nav class="settings-nav">
+            <button class="nav-item active" data-tab="profile" type="button">
+                <span class="icon">👤</span>
+                <span data-i18n="tabProfile">Профиль</span>
+            </button>
+            <button class="nav-item" data-tab="security" type="button">
+                <span class="icon">🔒</span>
+                <span data-i18n="tabSecurity">Безопасность</span>
+            </button>
+            <button class="nav-item" data-tab="prefs" type="button">
+                <span class="icon">⚙️</span>
+                <span data-i18n="tabPrefs">Предпочтения</span>
+            </button>
+            <button class="nav-item" data-tab="account" type="button">
+                <span class="icon">🚪</span>
+                <span data-i18n="tabAccount">Аккаунт</span>
+            </button>
+        </nav>
+
+        <!-- Content -->
+        <div class="settings-content">
+            <!-- PROFILE TAB -->
+            <div class="tab active" id="tab-profile">
+                <h2 class="section-title" data-i18n="profileTitle">Профиль</h2>
+                <p class="section-desc" data-i18n="profileDesc">Управляйте своими публичными данными в игре.</p>
+
+                <div class="avatar-row">
+                    <div class="avatar-big" id="avatar-display"></div>
+                    <div class="avatar-info">
+                        <h3 id="avatar-name">-</h3>
+                        <div class="meta" id="avatar-email">-</div>
+                        <span class="provider-badge" id="provider-badge">local</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="input-username" data-i18n="usernameLabel">Логин</label>
+                    <input type="text" class="form-input" id="input-username" autocomplete="off">
+                    <div class="form-msg" id="username-msg"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="input-first-name" data-i18n="firstNameLabel">Имя</label>
+                    <input type="text" class="form-input" id="input-first-name" autocomplete="given-name" maxlength="40">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="input-last-name" data-i18n="lastNameLabel">Фамилия</label>
+                    <input type="text" class="form-input" id="input-last-name" autocomplete="family-name" maxlength="40">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="input-email" data-i18n="emailLabel">Email</label>
+                    <input type="email" class="form-input" id="input-email" autocomplete="off">
+                    <div class="form-msg" id="email-msg"></div>
+                </div>
+
+                <button class="btn btn-primary" id="save-profile-btn" type="button" data-i18n="saveChanges">Сохранить изменения</button>
+            </div>
+
+            <!-- SECURITY TAB -->
+            <div class="tab" id="tab-security">
+                <h2 class="section-title" data-i18n="securityTitle">Безопасность</h2>
+                <p class="section-desc" data-i18n="securityDesc">Измените пароль, чтобы защитить аккаунт.</p>
+
+                <div id="security-local">
+                    <div class="form-group">
+                        <label class="form-label" for="current-password" data-i18n="currentPwLabel">Текущий пароль</label>
+                        <input type="password" class="form-input" id="current-password" autocomplete="current-password">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="new-password" data-i18n="newPwLabel">Новый пароль</label>
+                        <input type="password" class="form-input" id="new-password" autocomplete="new-password">
+                        <div class="form-hint" data-i18n="newPwHint">Минимум 6 символов</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="confirm-password" data-i18n="confirmPwLabel">Повторите новый пароль</label>
+                        <input type="password" class="form-input" id="confirm-password" autocomplete="new-password">
+                        <div class="form-msg" id="pw-msg"></div>
+                    </div>
+
+                    <button class="btn btn-primary" id="change-pw-btn" type="button" data-i18n="changePwBtn">Изменить пароль</button>
+                </div>
+
+                <div id="security-google" style="display:none">
+                    <div class="avatar-row">
+                        <div style="font-size:40px">🔐</div>
+                        <div class="avatar-info">
+                            <h3 data-i18n="googleAuthTitle">Вы вошли через Google</h3>
+                            <div class="meta" data-i18n="googleAuthDesc">Пароль управляется через ваш Google-аккаунт. Чтобы изменить его, перейдите в настройки безопасности Google.</div>
+                        </div>
+                    </div>
+                    <a href="https://myaccount.google.com/security" target="_blank" rel="noopener" class="btn btn-secondary" data-i18n="googleSecurityBtn">Безопасность Google →</a>
+                </div>
+            </div>
+
+            <!-- PREFERENCES TAB -->
+            <div class="tab" id="tab-prefs">
+                <h2 class="section-title" data-i18n="prefsTitle">Предпочтения</h2>
+                <p class="section-desc" data-i18n="prefsDesc">Настройте интерфейс и поведение игры под себя.</p>
+
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label" data-i18n="soundLabel">Звук в игре</div>
+                        <div class="toggle-sub" data-i18n="soundSub">Фоновая музыка и эффекты</div>
+                    </div>
+                    <div class="toggle" id="toggle-sound" role="switch" tabindex="0"></div>
+                </div>
+
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label" data-i18n="animLabel">Анимации интерфейса</div>
+                        <div class="toggle-sub" data-i18n="animSub">Отключите для слабых устройств</div>
+                    </div>
+                    <div class="toggle on" id="toggle-anim" role="switch" tabindex="0"></div>
+                </div>
+            </div>
+
+            <!-- ACCOUNT TAB -->
+            <div class="tab" id="tab-account">
+                <h2 class="section-title" data-i18n="accountTitle">Аккаунт</h2>
+                <p class="section-desc" data-i18n="accountDesc">Управление сессией и аккаунтом.</p>
+
+                <div class="account-actions">
+                    <button class="btn btn-secondary" id="logout-btn" type="button">
+                        <span>🚪</span>
+                        <span data-i18n="logoutBtn">Выйти из аккаунта</span>
+                    </button>
+                </div>
+
+                <div class="danger-zone">
+                    <h3 class="section-title" data-i18n="dangerTitle">Опасная зона</h3>
+                    <p class="section-desc" data-i18n="dangerDesc">Удаление аккаунта необратимо. Все ваши данные, прогресс и покупки будут безвозвратно потеряны.</p>
+                    <button class="btn btn-danger" id="delete-btn" type="button">
+                        <span>🗑</span>
+                        <span data-i18n="deleteAccountBtn">Удалить аккаунт</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="/src/pages/settings.ts"></script>
+
+</body>
+</html>

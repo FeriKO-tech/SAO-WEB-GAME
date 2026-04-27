@@ -1,0 +1,471 @@
+/**
+ * Register page specific styles.
+ *
+ * Shares the visual language with login (`page-auth` layout, auth-card
+ * aesthetic, submit button, divider, success screen, back-link and
+ * fixed lang-switcher). Adds what is unique to the registration flow:
+ *   - Slightly wider card (max-width 460 vs 420)
+ *   - Password strength meter (4 bars + colour scale)
+ *   - Real-time "match indicator" for username/email/password-confirm
+ *   - Agreement checkbox with inline links
+ *
+ * Depends on `variables.css` — loaded via `main.css` first.
+ */
+
+/* ===== Page layout (same shell as login) ===== */
+
+body.page-auth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 20px;
+}
+
+body.page-auth::after {
+    animation: register-drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes register-drift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-30px, 30px); }
+}
+
+/* ===== Card ===== */
+
+.register-container {
+    width: 100%;
+    max-width: 460px;
+    background: linear-gradient(135deg, rgba(30, 35, 50, 0.85), rgba(20, 25, 40, 0.85));
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--sao-accent-15);
+    border-radius: var(--sao-radius-2xl);
+    padding: 28px 32px;
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(0, 212, 255, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.register-container.done .form-view {
+    display: none;
+}
+
+/* ===== Logo block ===== */
+
+.logo-block {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.logo-block .logo-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--sao-gradient);
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sao-font-display);
+    font-size: 20px;
+    color: var(--sao-text);
+    margin-bottom: 10px;
+    box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+}
+
+.form-title {
+    font-family: var(--sao-font-display);
+    font-size: 22px;
+    background: linear-gradient(135deg, #fff 0%, var(--sao-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.form-subtitle {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== Form controls (tighter spacing than login) ===== */
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-label {
+    display: block;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 11px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--sao-radius-md);
+    color: var(--sao-text);
+    font-size: 14px;
+    font-family: inherit;
+    transition: all var(--sao-transition-slow);
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.form-input:focus {
+    border-color: var(--sao-border-accent-strong);
+    background: var(--sao-accent-05);
+    box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.08);
+}
+
+.form-input.error {
+    border-color: rgba(255, 80, 80, 0.6);
+    background: rgba(255, 80, 80, 0.05);
+}
+
+.form-input.match-ok {
+    border-color: var(--sao-border-accent-strong);
+    background: var(--sao-accent-05);
+}
+
+.form-error {
+    color: var(--sao-danger);
+    font-size: 12px;
+    margin-top: 6px;
+    display: none;
+}
+
+.form-error.show {
+    display: block;
+}
+
+/* ===== Password strength meter ===== */
+
+.password-strength {
+    margin-top: 8px;
+    display: none;
+}
+
+.password-strength.show {
+    display: block;
+}
+
+.strength-bars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 5px;
+}
+
+.strength-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    transition: background var(--sao-transition-slow);
+}
+
+.password-strength[data-level="1"] .strength-bar:nth-child(1),
+.password-strength[data-level="2"] .strength-bar:nth-child(-n+2),
+.password-strength[data-level="3"] .strength-bar:nth-child(-n+3),
+.password-strength[data-level="4"] .strength-bar:nth-child(-n+4) {
+    background: var(--strength-color, #ff6b6b);
+}
+
+.password-strength[data-level="1"] { --strength-color: #ff6b6b; }
+.password-strength[data-level="2"] { --strength-color: #ffa500; }
+.password-strength[data-level="3"] { --strength-color: #ffd93d; }
+.password-strength[data-level="4"] { --strength-color: #00d4ff; }
+
+.strength-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.strength-label-text {
+    color: var(--strength-color, rgba(255, 255, 255, 0.5));
+    font-weight: 600;
+}
+
+.strength-hint {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 10px;
+}
+
+/* ===== Match indicator (username / email / confirm-password) ===== */
+
+.match-indicator {
+    font-size: 11px;
+    margin-top: 6px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+}
+
+.match-indicator.show {
+    display: flex;
+}
+
+.match-indicator.ok {
+    color: var(--sao-primary);
+}
+
+.match-indicator.fail {
+    color: var(--sao-danger);
+}
+
+/* ===== Agreement checkbox (multi-line, inline links) ===== */
+
+.form-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 14px 0 18px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.form-checkbox input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--sao-primary);
+    cursor: pointer;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.form-checkbox span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+}
+
+.form-checkbox a {
+    color: var(--sao-primary);
+    text-decoration: none;
+}
+
+.form-checkbox a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Divider ===== */
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== Google button ===== */
+
+.social-buttons {
+    margin-bottom: 18px;
+}
+
+.social-btn {
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    color: #202124;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--sao-transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.social-btn:hover:not(:disabled) {
+    background: #f8f8f8;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.social-btn .icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+/* ===== Submit button (same gradient pill) ===== */
+
+.submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--sao-gradient);
+    border: none;
+    border-radius: 50px;
+    color: var(--sao-text);
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all var(--sao-transition-slow);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: var(--sao-shadow-md);
+    font-family: inherit;
+}
+
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.6);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ===== Footer ===== */
+
+.form-footer {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-footer a {
+    color: var(--sao-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Success state (slightly larger icon than login) ===== */
+
+.success-view {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.success-view.show {
+    display: block;
+}
+
+.success-icon {
+    width: 90px;
+    height: 90px;
+    background: var(--sao-gradient);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    color: var(--sao-text);
+    margin-bottom: 24px;
+    box-shadow: var(--sao-shadow-lg);
+    animation: register-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes register-pop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+.success-title {
+    font-family: var(--sao-font-display);
+    font-size: 26px;
+    background: linear-gradient(135deg, #fff 0%, var(--sao-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+}
+
+.success-message {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.countdown {
+    color: var(--sao-primary);
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+/* ===== Floating back-link (lang switcher uses shared component) ===== */
+
+.back-link {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color var(--sao-transition);
+    z-index: 10;
+}
+
+.back-link:hover {
+    color: var(--sao-primary);
+    text-decoration: none;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 540px) {
+    .register-container {
+        padding: 36px 24px;
+    }
+
+    .form-title {
+        font-size: 22px;
+    }
+
+    .back-link {
+        top: 16px;
+        left: 16px;
+    }
+}

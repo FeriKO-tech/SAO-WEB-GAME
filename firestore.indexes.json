@@ -1,0 +1,13 @@
+{
+    "indexes": [
+        {
+            "collectionGroup": "forumThreads",
+            "queryScope": "COLLECTION",
+            "fields": [
+                { "fieldPath": "pinned", "order": "DESCENDING" },
+                { "fieldPath": "lastActivity", "order": "DESCENDING" }
+            ]
+        }
+    ],
+    "fieldOverrides": []
+}

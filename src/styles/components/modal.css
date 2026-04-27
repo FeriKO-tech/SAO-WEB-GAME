@@ -1,0 +1,98 @@
+/**
+ * Modal dialog.
+ *
+ * Usage:
+ * <div class="modal-backdrop" id="my-modal">
+ *   <div class="modal">
+ *     <h3 class="modal-title">Title</h3>
+ *     <p class="modal-body">Content</p>
+ *     <div class="modal-actions">
+ *       <button class="btn btn-secondary">Cancel</button>
+ *       <button class="btn btn-danger-solid">Confirm</button>
+ *     </div>
+ *   </div>
+ * </div>
+ *
+ * Toggle visibility by adding/removing `.show` on the backdrop.
+ */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 14, 23, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: var(--sao-z-modal);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--sao-transition);
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: linear-gradient(135deg, #1a1f35 0%, #0f1420 100%);
+    border: 1px solid var(--sao-accent-15);
+    border-radius: var(--sao-radius-2xl);
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: var(--sao-shadow-modal);
+    transform: translateY(16px) scale(0.96);
+    transition: all var(--sao-transition);
+}
+
+.modal-backdrop.show .modal {
+    transform: translateY(0) scale(1);
+}
+
+.modal-title {
+    font-family: var(--sao-font-display);
+    font-size: 22px;
+    color: var(--sao-text);
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.modal-body {
+    font-size: 14px;
+    color: var(--sao-text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.modal-body strong {
+    color: var(--sao-text);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.modal-actions .btn {
+    flex: 1;
+    min-width: 120px;
+}
+
+@media (max-width: 480px) {
+    .modal {
+        padding: 24px 20px;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+    }
+}

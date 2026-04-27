@@ -1,0 +1,146 @@
+/**
+ * File-upload dropzone and file-list.
+ *
+ * Used on the support page for attaching screenshots, documents, and
+ * screen recordings to support tickets. Video thumbnails are rendered
+ * into `<img>` tags (a frame extracted to data-URL via canvas in JS).
+ */
+
+.sao-dropzone {
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: var(--sao-radius-lg);
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--sao-transition);
+    background: rgba(15, 20, 32, 0.4);
+}
+
+.sao-dropzone:hover,
+.sao-dropzone.drag-over {
+    border-color: var(--sao-border-accent-strong);
+    background: var(--sao-accent-05);
+}
+
+.sao-dropzone-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    opacity: 0.6;
+}
+
+.sao-dropzone-text {
+    font-size: 14px;
+    color: var(--sao-text-muted);
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.sao-dropzone-text .accent {
+    color: var(--sao-primary);
+}
+
+.sao-dropzone-hint {
+    font-size: 12px;
+    color: var(--sao-text-faint);
+}
+
+.sao-file-input-hidden {
+    display: none;
+}
+
+/* ===== Attached-files list ===== */
+
+.sao-file-list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sao-file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--sao-surface-3);
+    border: 1px solid var(--sao-border);
+    border-radius: var(--sao-radius-md);
+}
+
+.sao-file-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--sao-radius-sm);
+    background: var(--sao-accent-10);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.sao-file-thumb img,
+.sao-file-thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sao-file-thumb.video-thumb {
+    position: relative;
+}
+
+.sao-file-thumb.video-thumb::after {
+    content: '▶';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+}
+
+.sao-file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.sao-file-name {
+    font-size: 13px;
+    color: var(--sao-text);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sao-file-size {
+    font-size: 11px;
+    color: var(--sao-text-faint);
+    margin-top: 2px;
+}
+
+.sao-file-remove {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--sao-danger-bg);
+    border-radius: var(--sao-radius-sm);
+    color: var(--sao-danger);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--sao-transition-fast);
+    flex-shrink: 0;
+}
+
+.sao-file-remove:hover {
+    background: rgba(255, 107, 107, 0.2);
+}

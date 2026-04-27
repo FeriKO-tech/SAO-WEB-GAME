@@ -1,0 +1,23 @@
+/**
+ * Main stylesheet — entry point for all shared styles.
+ *
+ * Pages that want the full SAO look include this one file:
+ *   <link rel="stylesheet" href="/src/styles/main.css">
+ *
+ * Import order is important: variables → base → components.
+ * Within components, rules are written so specificity is low enough
+ * that page-level overrides work without `!important`.
+ */
+
+@import './variables.css';
+@import './base.css';
+
+@import './components/header.css';
+@import './components/lang-switcher.css';
+@import './components/buttons.css';
+@import './components/forms.css';
+@import './components/cards.css';
+@import './components/modal.css';
+@import './components/toast.css';
+@import './components/file-upload.css';
+@import './components/skeleton.css';

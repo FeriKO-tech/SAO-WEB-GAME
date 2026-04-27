@@ -1,0 +1,86 @@
+/**
+ * Design tokens.
+ *
+ * All colours, radii, shadows, and gradients used across the site are
+ * declared here. Components should reference these variables instead of
+ * hard-coding raw values — that way a single edit to this file re-skins
+ * the entire product.
+ */
+
+:root {
+    /* ===== Brand ===== */
+    --sao-primary: #00d4ff;                 /* primary cyan */
+    --sao-primary-end: #0066ff;             /* gradient end blue */
+    --sao-gradient: linear-gradient(135deg, #00d4ff, #0066ff);
+
+    /* ===== Surfaces ===== */
+    --sao-bg: #0a0e17;                      /* page background */
+    --sao-surface-1: rgba(30, 35, 50, 0.85); /* raised card */
+    --sao-surface-2: rgba(30, 35, 50, 0.7);  /* subtle card */
+    --sao-surface-3: rgba(15, 20, 32, 0.6);  /* input / inset */
+    --sao-surface-header: rgba(10, 14, 23, 0.95);
+    --sao-surface-dropdown: rgba(15, 20, 32, 0.97);
+
+    /* ===== Text ===== */
+    --sao-text: #ffffff;
+    --sao-text-muted: rgba(255, 255, 255, 0.7);
+    --sao-text-dim: rgba(255, 255, 255, 0.55);
+    --sao-text-faint: rgba(255, 255, 255, 0.4);
+
+    /* ===== Borders ===== */
+    --sao-border: rgba(255, 255, 255, 0.08);
+    --sao-border-strong: rgba(255, 255, 255, 0.12);
+    --sao-border-accent: rgba(0, 212, 255, 0.25);
+    --sao-border-accent-strong: rgba(0, 212, 255, 0.5);
+
+    /* ===== State colours ===== */
+    --sao-danger: #ff6b6b;
+    --sao-danger-bg: rgba(255, 107, 107, 0.1);
+    --sao-danger-border: rgba(255, 107, 107, 0.5);
+    --sao-success: #51cf66;
+    --sao-success-bg: rgba(81, 207, 102, 0.1);
+    --sao-success-border: rgba(81, 207, 102, 0.5);
+    --sao-warn: #ffd43b;
+
+    /* ===== Accent tints ===== */
+    --sao-accent-05: rgba(0, 212, 255, 0.05);
+    --sao-accent-10: rgba(0, 212, 255, 0.10);
+    --sao-accent-15: rgba(0, 212, 255, 0.15);
+    --sao-accent-20: rgba(0, 212, 255, 0.20);
+    --sao-accent-30: rgba(0, 212, 255, 0.30);
+
+    /* ===== Radii ===== */
+    --sao-radius-sm: 8px;
+    --sao-radius-md: 10px;
+    --sao-radius-lg: 12px;
+    --sao-radius-xl: 16px;
+    --sao-radius-2xl: 20px;
+    --sao-radius-pill: 9999px;
+
+    /* ===== Shadows ===== */
+    --sao-shadow-sm: 0 4px 15px rgba(0, 212, 255, 0.3);
+    --sao-shadow-md: 0 10px 30px rgba(0, 212, 255, 0.25);
+    --sao-shadow-lg: 0 14px 36px rgba(0, 212, 255, 0.4);
+    --sao-shadow-card: 0 12px 30px rgba(0, 212, 255, 0.4);
+    --sao-shadow-dropdown: 0 12px 40px rgba(0, 0, 0, 0.5);
+    --sao-shadow-modal: 0 15px 40px rgba(0, 0, 0, 0.5);
+
+    /* ===== Typography ===== */
+    --sao-font-body: 'Open Sans', Arial, sans-serif;
+    --sao-font-display: 'Russo One', sans-serif;
+
+    /* ===== Layout ===== */
+    --sao-header-height: 64px;
+    --sao-container-max: 1200px;
+
+    /* ===== Motion ===== */
+    --sao-transition-fast: 0.15s ease;
+    --sao-transition: 0.2s ease;
+    --sao-transition-slow: 0.3s ease;
+
+    /* ===== Z-index scale ===== */
+    --sao-z-header: 1000;
+    --sao-z-dropdown: 2000;
+    --sao-z-modal: 3000;
+    --sao-z-toast: 4000;
+}

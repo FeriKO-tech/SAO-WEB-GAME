@@ -1,0 +1,67 @@
+/**
+ * Toast notifications.
+ *
+ * The toast element is created by `src/lib/toast.ts` lazily. Do NOT
+ * manually add `.toast` elements to markup — use `showToast()` from JS.
+ */
+
+.toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: linear-gradient(135deg, #1e3a5f, #162742);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: var(--sao-radius-lg);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--sao-text);
+    box-shadow: var(--sao-shadow-modal);
+    z-index: var(--sao-z-toast);
+    transition: transform var(--sao-transition-slow);
+    max-width: 90vw;
+    pointer-events: none;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.toast.ok {
+    border-color: var(--sao-success-border);
+}
+
+.toast.err {
+    border-color: var(--sao-danger-border);
+}
+
+.toast.info {
+    border-color: rgba(0, 212, 255, 0.4);
+}
+
+.toast-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.toast.ok .toast-icon {
+    color: var(--sao-success);
+}
+
+.toast.err .toast-icon {
+    color: var(--sao-danger);
+}
+
+.toast.info .toast-icon {
+    color: var(--sao-primary);
+}
+
+.toast-text {
+    flex: 1;
+    min-width: 0;
+}

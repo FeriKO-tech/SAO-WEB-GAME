@@ -1,0 +1,241 @@
+/**
+ * Site header with logo, primary navigation, and user menu.
+ *
+ * Usage:
+ * <header class="sao-header">
+ *   <div class="sao-header-inner">
+ *     <a class="sao-logo" href="/">
+ *       <span class="sao-logo-icon">SAO</span>
+ *       Sword Art Online
+ *     </a>
+ *     <nav class="sao-nav"> ... </nav>
+ *   </div>
+ * </header>
+ */
+
+.sao-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--sao-z-header);
+    background: var(--sao-surface-header);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    height: var(--sao-header-height);
+    display: flex;
+    align-items: center;
+}
+
+.sao-header-inner {
+    max-width: var(--sao-container-max);
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ===== Logo ===== */
+
+.sao-logo {
+    font-family: var(--sao-font-display);
+    font-size: 20px;
+    color: var(--sao-text);
+    text-decoration: none;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sao-logo:hover {
+    text-decoration: none;
+}
+
+.sao-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--sao-gradient);
+    border-radius: var(--sao-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: var(--sao-shadow-sm);
+    color: var(--sao-text);
+}
+
+/* ===== Navigation ===== */
+
+.sao-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sao-nav a {
+    color: var(--sao-text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: var(--sao-radius-sm);
+    transition: all var(--sao-transition);
+}
+
+.sao-nav a:hover {
+    color: var(--sao-text);
+    background: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+}
+
+/* ===== User menu (shown when logged in) ===== */
+
+.sao-user-menu {
+    position: relative;
+    margin-left: 8px;
+    display: none;
+}
+
+.sao-user-menu.show {
+    display: block;
+}
+
+.sao-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--sao-accent-10);
+    border: 1px solid var(--sao-border-accent);
+    color: var(--sao-text);
+    padding: 6px 14px 6px 6px;
+    border-radius: var(--sao-radius-pill);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all var(--sao-transition);
+}
+
+.sao-user-btn:hover {
+    background: var(--sao-accent-20);
+    border-color: var(--sao-border-accent-strong);
+}
+
+.sao-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--sao-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sao-font-display);
+    font-size: 14px;
+    color: var(--sao-text);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.sao-user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sao-user-name {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sao-user-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 220px;
+    background: rgba(15, 20, 35, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: var(--sao-radius-lg);
+    padding: 8px;
+    box-shadow: var(--sao-shadow-modal);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all var(--sao-transition);
+    z-index: 100;
+}
+
+.sao-user-menu.open .sao-user-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.sao-user-dropdown-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--sao-border);
+    margin-bottom: 6px;
+}
+
+.sao-user-dropdown-email {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    word-break: break-all;
+}
+
+.sao-user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: var(--sao-radius-sm);
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    transition: all var(--sao-transition-fast);
+}
+
+.sao-user-dropdown-item:hover {
+    background: var(--sao-accent-10);
+    color: var(--sao-text);
+    text-decoration: none;
+}
+
+.sao-user-dropdown-item.logout {
+    color: var(--sao-danger);
+}
+
+.sao-user-dropdown-item.logout:hover {
+    background: var(--sao-danger-bg);
+}
+
+/* ===== Mobile header ===== */
+
+@media (max-width: 768px) {
+    .sao-header {
+        height: 56px;
+    }
+
+    .sao-nav {
+        gap: 4px;
+    }
+
+    .sao-nav a {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .sao-user-name {
+        display: none;
+    }
+}

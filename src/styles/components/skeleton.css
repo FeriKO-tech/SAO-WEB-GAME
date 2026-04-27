@@ -1,0 +1,52 @@
+/**
+ * Skeleton loading placeholders.
+ *
+ * Low-contrast shimmer blocks used while awaiting data from Firestore.
+ * Classes are deliberately generic so news, forum, and any future list
+ * page can reuse them:
+ *
+ *   <div class="skeleton-box"></div>
+ *   <div class="skeleton-line"></div>
+ *   <div class="skeleton-line skeleton-line--sm"></div>
+ *   <div class="skeleton-line skeleton-line--lg"></div>
+ */
+
+@keyframes sao-skeleton-shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton-box,
+.skeleton-line {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.04) 100%
+    );
+    background-size: 200% 100%;
+    animation: sao-skeleton-shimmer 1.6s linear infinite;
+    border-radius: var(--sao-radius-sm);
+}
+
+.skeleton-box {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--sao-radius-md);
+}
+
+.skeleton-line {
+    height: 12px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.skeleton-line:last-child { margin-bottom: 0; }
+
+.skeleton-line--sm { width: 40%; height: 10px; }
+.skeleton-line--lg { width: 80%; height: 18px; }
+
+.no-anim .skeleton-box,
+.no-anim .skeleton-line {
+    animation: none;
+}

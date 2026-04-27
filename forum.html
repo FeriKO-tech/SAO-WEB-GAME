@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форум | Sword Art Online</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Pre-render guard: apply no-anim before first paint. Must run sync. -->
+    <script src="/preload-prefs.js"></script>
+
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/forum.css">
+</head>
+<body class="page-forum">
+
+<a href="index.html" class="back-link" data-i18n="back">← На главную</a>
+
+<div class="sao-lang-switcher fixed" id="lang-switcher">
+    <button class="sao-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+        <span id="current-lang">RU</span>
+        <span class="arrow">▼</span>
+    </button>
+    <div class="sao-lang-dropdown" id="lang-dropdown">
+        <a href="#" class="active" data-lang="RU">RU - Русский</a>
+        <a href="#" data-lang="EN">EN - English</a>
+        <a href="#" data-lang="DE">DE - Deutsch</a>
+        <a href="#" data-lang="FR">FR - Français</a>
+        <a href="#" data-lang="PL">PL - Polski</a>
+        <a href="#" data-lang="ES">ES - Español</a>
+        <a href="#" data-lang="CZ">CZ - Čeština</a>
+        <a href="#" data-lang="IT">IT - Italiano</a>
+    </div>
+</div>
+
+<div class="page-container">
+    <header id="forum-page-header" class="page-header">
+        <div class="logo-icon">SAO</div>
+        <h1 class="page-title" data-i18n="title">Форум</h1>
+        <p class="page-subtitle" data-i18n="subtitle">Обсуждения, гайды и общение с сообществом.</p>
+    </header>
+
+    <!-- Main View -->
+    <section id="forum-main-view" class="forum-view">
+        <section id="forum-categories-section" class="forum-section">
+            <h2 class="section-title" data-i18n="categoriesTitle">Категории</h2>
+            <div class="forum-table">
+                <div class="forum-table-header">
+                    <div class="col-main" data-i18n="thForum">Форум</div>
+                    <div class="col-stats" data-i18n="thThreads">Тем</div>
+                    <div class="col-stats" data-i18n="thPosts">Ответов</div>
+                    <div class="col-last" data-i18n="thLastPost">Последнее сообщение</div>
+                </div>
+                <div id="forum-categories" class="forum-categories-list"></div>
+            </div>
+        </section>
+    </section>
+
+    <!-- Category View -->
+    <section id="forum-category-view" class="forum-view" hidden>
+        <nav class="forum-breadcrumb" aria-label="Breadcrumb">
+            <button type="button" class="forum-breadcrumb-link forum-home-link" data-i18n="title">Форум</button>
+            <span class="forum-breadcrumb-sep">/</span>
+            <span class="forum-breadcrumb-current" id="forum-category-breadcrumb-current">Категория</span>
+        </nav>
+        <header class="forum-thread-top" style="margin-bottom: 24px;">
+            <div class="forum-thread-top-main">
+                <h2 id="forum-category-view-title" class="forum-thread-view-title">Категория</h2>
+            </div>
+        </header>
+
+        <!-- Search + new thread button -->
+        <div id="forum-toolbar" class="forum-toolbar">
+            <label class="forum-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="m21 21-4.3-4.3"/>
+                </svg>
+                <input type="search" id="forum-search-input" placeholder="Поиск по форуму..." data-i18n="searchPlaceholder" data-i18n-attr="placeholder" autocomplete="off">
+            </label>
+            <div class="forum-toolbar-side">
+                <button type="button" id="forum-new-thread-btn" class="btn btn-primary" hidden data-i18n="newThread">Новая тема</button>
+                <div class="forum-status" aria-live="polite">
+                    <span class="forum-status-badge" data-i18n="readOnlyBadge">Read-only</span>
+                    <span class="forum-status-text" data-i18n="readOnlyDesc">Публикация тем скоро появится. Пока можно читать и искать обсуждения.</span>
+                </div>
+            </div>
+        </div>
+
+        <section id="forum-threads-section" class="forum-section">
+            <div class="forum-table">
+                <div class="forum-table-header">
+                    <div class="col-main" data-i18n="thTopic">Тема</div>
+                    <div class="col-stats" data-i18n="thReplies">Ответов</div>
+                    <div class="col-stats" data-i18n="thViews">Просмотров</div>
+                    <div class="col-last" data-i18n="thLastPost">Последнее сообщение</div>
+                </div>
+                <div id="forum-threads" class="forum-threads-list" aria-live="polite"></div>
+            </div>
+            <div id="forum-empty" class="forum-empty" hidden>
+                <div class="forum-empty-icon">∅</div>
+                <h3 class="forum-empty-title" data-i18n="emptyTitle">Ничего не найдено</h3>
+                <p class="forum-empty-desc" data-i18n="emptyDesc">Попробуйте другой запрос или выберите категорию.</p>
+            </div>
+        </section>
+    </section>
+
+    <section id="forum-admin-panel" class="forum-admin-panel" hidden>
+        <div class="forum-admin-copy">
+            <span class="forum-admin-badge">STAFF</span>
+            <div>
+                <h2 class="forum-admin-title">Управление видимостью форума</h2>
+                <p class="forum-admin-desc">Можно отдельно управлять публичной видимостью форума и заранее переключать режим постинга для следующего этапа.</p>
+            </div>
+        </div>
+        <div class="forum-admin-actions">
+            <span id="forum-posting-state" class="forum-admin-chip">Постинг: выключен</span>
+            <div class="forum-admin-buttons">
+                <button type="button" id="forum-visibility-toggle" class="btn btn-secondary">Скрыть форум</button>
+                <button type="button" id="forum-posting-toggle" class="btn btn-secondary">Включить постинг</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="forum-hidden-state" class="forum-hidden-state" hidden></section>
+
+    <section id="forum-thread-screen" class="forum-thread-screen" hidden>
+        <div id="forum-thread-state" class="forum-thread-state">Загрузка...</div>
+        <div id="forum-thread-ready" hidden>
+            <nav class="forum-breadcrumb" aria-label="Breadcrumb">
+                <button type="button" class="forum-breadcrumb-link forum-home-link" data-i18n="title">Форум</button>
+                <span class="forum-breadcrumb-sep">/</span>
+                <button type="button" class="forum-breadcrumb-link forum-cat-link" id="forum-thread-breadcrumb-cat">Категория</button>
+                <span class="forum-breadcrumb-sep">/</span>
+                <span class="forum-breadcrumb-current" id="forum-thread-breadcrumb-current">Тема</span>
+            </nav>
+            <header class="forum-thread-top">
+                <div class="forum-thread-top-main">
+                    <h2 id="forum-thread-view-title" class="forum-thread-view-title">Тема</h2>
+                    <div id="forum-thread-view-meta" class="forum-thread-view-meta"></div>
+                </div>
+            </header>
+
+            <div id="forum-thread-posts" class="forum-posts" aria-live="polite"></div>
+
+            <div id="forum-thread-status-bar" class="forum-thread-status-bar" hidden></div>
+
+            <form id="forum-thread-reply-form" class="forum-thread-reply-wrapper" hidden>
+                <div class="forum-thread-reply">
+                    <textarea id="forum-thread-reply-input" class="forum-thread-reply-input" rows="3" maxlength="5000" data-i18n="threadReplyPlaceholder" data-i18n-attr="placeholder" placeholder="Напишите ответ..."></textarea>
+                    <div class="reply-actions">
+                        <label class="btn btn-secondary btn-sm file-attach-btn" title="Прикрепить скриншоты">
+                            📎 <input type="file" id="forum-reply-files" multiple accept="image/*" hidden>
+                        </label>
+                        <button id="forum-thread-reply-submit" type="submit" class="btn btn-primary" data-i18n="threadReplySubmit">Ответить</button>
+                    </div>
+                </div>
+                <div id="forum-reply-file-preview" class="file-preview-list"></div>
+            </form>
+        </div>
+    </section>
+
+    <div id="forum-thread-modal" class="modal-backdrop" aria-hidden="true">
+        <div class="modal forum-compose-modal" role="dialog" aria-modal="true" aria-labelledby="forum-thread-modal-title">
+            <h2 id="forum-thread-modal-title" class="modal-title" data-i18n="threadCreateTitle">Новая тема</h2>
+            <p class="modal-body" data-i18n="threadCreateDesc">Создайте обсуждение прямо на сайте и откройте его для сообщества.</p>
+            <form id="forum-thread-form" class="forum-compose-form">
+                <div class="form-group">
+                    <label for="forum-thread-category" class="form-label" data-i18n="threadCreateCategory">Категория</label>
+                    <select id="forum-thread-category" class="form-select"></select>
+                </div>
+                <div class="form-group">
+                    <label for="forum-thread-title" class="form-label" data-i18n="threadCreateSubject">Заголовок</label>
+                    <input id="forum-thread-title" class="form-input" type="text" maxlength="140" data-i18n="threadCreateSubjectPlaceholder" data-i18n-attr="placeholder" placeholder="Напишите заголовок темы">
+                </div>
+                <div class="form-group">
+                    <label for="forum-thread-content" class="form-label" data-i18n="threadCreateMessage">Сообщение</label>
+                    <textarea id="forum-thread-content" class="form-textarea" rows="6" maxlength="10000" data-i18n="threadCreateMessagePlaceholder" data-i18n-attr="placeholder" placeholder="Опишите тему, вопрос или новость"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="btn btn-secondary btn-sm" style="display: inline-block; cursor: pointer;">
+                        📎 Прикрепить скриншоты
+                        <input type="file" id="forum-thread-files" multiple accept="image/*" hidden>
+                    </label>
+                    <div id="forum-thread-file-preview" class="file-preview-list" style="margin-top: 10px;"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="forum-thread-cancel" class="btn btn-secondary" data-i18n="cancel">Отмена</button>
+                    <button type="submit" id="forum-thread-submit" class="btn btn-primary" data-i18n="threadCreateSubmit">Опубликовать тему</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+<div id="toast-container" class="sao-toast-container" aria-live="polite"></div>
+
+<script type="module" src="/src/pages/forum.ts"></script>
+</body>
+</html>

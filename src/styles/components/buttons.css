@@ -1,0 +1,182 @@
+/**
+ * Buttons.
+ *
+ * Base class: `.btn`
+ * Variants:
+ *   - `.btn-primary`   — gradient CTA (sign-in, submit)
+ *   - `.btn-secondary` — muted outline
+ *   - `.btn-danger`    — red (delete account)
+ *   - `.btn-ghost`     — transparent, used in dropdowns
+ *   - `.btn-back`      — small back-link floating button
+ *
+ * Size modifiers: `.btn-sm`, `.btn-lg`
+ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    border-radius: var(--sao-radius-md);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--sao-transition);
+    user-select: none;
+    white-space: nowrap;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--sao-primary);
+    outline-offset: 2px;
+}
+
+/* ===== Primary ===== */
+
+.btn-primary {
+    background: var(--sao-gradient);
+    color: var(--sao-text);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: var(--sao-radius-lg);
+    padding: 14px 24px;
+    box-shadow: var(--sao-shadow-md);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--sao-shadow-lg);
+    text-decoration: none;
+}
+
+.btn-primary.full {
+    width: 100%;
+}
+
+/* ===== Secondary ===== */
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--sao-text);
+    border-color: var(--sao-border-strong);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--sao-border-accent-strong);
+    text-decoration: none;
+}
+
+/* ===== Danger ===== */
+
+.btn-danger {
+    background: var(--sao-danger-bg);
+    color: var(--sao-danger);
+    border-color: var(--sao-danger-border);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: rgba(255, 107, 107, 0.2);
+    text-decoration: none;
+}
+
+.btn-danger-solid {
+    background: var(--sao-danger);
+    color: var(--sao-text);
+}
+
+.btn-danger-solid:hover:not(:disabled) {
+    background: #ff5252;
+    text-decoration: none;
+}
+
+/* ===== Ghost ===== */
+
+.btn-ghost {
+    background: none;
+    color: var(--sao-text-muted);
+    border-color: transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--sao-text);
+    text-decoration: none;
+}
+
+/* ===== Back button (floating) ===== */
+
+.btn-back {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: var(--sao-z-dropdown);
+    padding: 8px 16px;
+    background: rgba(15, 20, 32, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--sao-radius-md);
+    color: var(--sao-text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--sao-transition);
+}
+
+.btn-back:hover {
+    color: var(--sao-primary);
+    border-color: var(--sao-border-accent-strong);
+    text-decoration: none;
+}
+
+@media (max-width: 640px) {
+    .btn-back {
+        top: 16px;
+        left: 16px;
+    }
+}
+
+/* ===== Sizes ===== */
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: var(--sao-radius-sm);
+}
+
+.btn-lg {
+    padding: 16px 32px;
+    font-size: 16px;
+}
+
+/* ===== Login header shortcut ===== */
+
+.btn-login {
+    background: var(--sao-gradient);
+    color: var(--sao-text);
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: var(--sao-radius-pill);
+    margin-left: 8px;
+    text-decoration: none;
+    transition: all var(--sao-transition);
+}
+
+.btn-login:hover {
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+    transform: translateY(-2px);
+    text-decoration: none;
+}

@@ -1,0 +1,601 @@
+rules_version = '2';
+
+// Firestore security rules for Sword Art Online Web.
+//
+// Philosophy:
+//   * Everything is denied by default. Each collection explicitly opts in.
+//   * Admin-authored content (news, forum categories) is read-only from
+//     the client — seeded via the Admin SDK or Console.
+//   * User-generated content (forum threads) is writable only by its
+//     author, identified by `authorUid == request.auth.uid`.
+//   * Shape validation is done inline on writes to reject malformed docs
+//     even if an attacker bypasses the client.
+
+service cloud.firestore {
+    match /databases/{database}/documents {
+
+        // ---------- helpers ----------
+        function isSignedIn() {
+            return request.auth != null;
+        }
+
+        function isOwner(uid) {
+            return isSignedIn() && request.auth.uid == uid;
+        }
+
+        function isStaff() {
+            return isSignedIn()
+                && ('role' in request.auth.token)
+                && request.auth.token.role in ['staff', 'admin'];
+        }
+
+        function authEmail() {
+            return isSignedIn() && ('email' in request.auth.token)
+                ? request.auth.token.email
+                : '';
+        }
+
+        function incomingData() {
+            return request.resource.data;
+        }
+
+        function existingData() {
+            return resource.data;
+        }
+
+        function forumPostingEnabled() {
+            return exists(/databases/$(database)/documents/siteSettings/forum)
+                && get(/databases/$(database)/documents/siteSettings/forum).data.postingEnabled == true;
+        }
+
+        function isForumCategoryKey(value) {
+            return value in [
+                'catDiscussions',
+                'catGuides',
+                'catBugs',
+                'catSuggestions',
+                'catOfftopic'
+            ];
+        }
+
+        function isIsoDateTime(value) {
+            return value is string
+                && value.matches('^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?Z$');
+        }
+
+        function forumAuthorMatchesProfile(author) {
+            return exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == author;
+        }
+
+        // ---------- usernames/{usernameLower} ----------
+        // Reservation documents for unique usernames.
+        // Doc id = username.toLowerCase(); body = { uid }.
+        // Publicly readable so the registration form can check availability
+        // before an anonymous user has a uid.
+        match /usernames/{usernameLower} {
+            allow read: if true;
+
+            // Anyone signed-in can claim a free username — only for their own uid.
+            allow create: if isSignedIn()
+                && incomingData().keys().hasOnly(['uid'])
+                && incomingData().uid == request.auth.uid
+                && usernameLower.size() >= 3
+                && usernameLower.size() <= 20
+                && usernameLower.matches('^[a-z0-9_-]+$')
+                && existsAfter(/databases/$(database)/documents/users/$(request.auth.uid))
+                && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username is string
+                && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username.lower() == usernameLower;
+
+            // Deleting a username frees it — only the current owner.
+            allow delete: if isSignedIn()
+                && existingData().uid == request.auth.uid
+                && (
+                    !existsAfter(/databases/$(database)/documents/users/$(request.auth.uid))
+                    || (
+                        getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username is string
+                        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username.lower() != usernameLower
+                    )
+                );
+
+            // Updates forbidden — delete + create pattern instead.
+            allow update: if false;
+        }
+
+        // ---------- users/{uid} ----------
+        // Profile document created alongside Firebase Auth sign-up.
+        // Shape: { username: string, email: string, createdAt: timestamp,
+        //          language: string, preferences: map }
+        match /users/{uid} {
+            allow read: if isOwner(uid) || isStaff();
+
+            allow create: if isOwner(uid)
+                && incomingData().keys().hasOnly([
+                    'username', 'email', 'createdAt', 'language', 'preferences',
+                    'avatar', 'firstName', 'lastName'
+                ])
+                && incomingData().username is string
+                && incomingData().username.size() >= 3
+                && incomingData().username.size() <= 20
+                && incomingData().username.matches('^[A-Za-z0-9_-]+$')
+                && incomingData().email is string
+                && incomingData().email == authEmail()
+                && incomingData().language is string
+                && incomingData().language.size() == 2
+                && incomingData().preferences is map
+                && incomingData().createdAt is timestamp
+                && existsAfter(/databases/$(database)/documents/usernames/$(incomingData().username.lower()))
+                && getAfter(/databases/$(database)/documents/usernames/$(incomingData().username.lower())).data.uid == request.auth.uid
+                && (!('avatar' in incomingData())
+                    || (incomingData().avatar is string && incomingData().avatar.size() <= 500))
+                && (!('firstName' in incomingData())
+                    || (incomingData().firstName is string && incomingData().firstName.size() <= 40))
+                && (!('lastName' in incomingData())
+                    || (incomingData().lastName is string && incomingData().lastName.size() <= 40));
+
+            allow update: if isOwner(uid)
+                && incomingData().keys().hasOnly([
+                    'username', 'email', 'createdAt', 'language', 'preferences',
+                    'avatar', 'firstName', 'lastName'
+                ])
+                && incomingData().username is string
+                && incomingData().username.size() >= 3
+                && incomingData().username.size() <= 20
+                && incomingData().username.matches('^[A-Za-z0-9_-]+$')
+                && (!('language' in incomingData())
+                    || (incomingData().language is string && incomingData().language.size() == 2))
+                && (!('preferences' in incomingData())
+                    || incomingData().preferences is map)
+                // createdAt is immutable; email must stay aligned with Auth.
+                && incomingData().email is string
+                && incomingData().email == authEmail()
+                && incomingData().createdAt == existingData().createdAt
+                && (
+                    incomingData().username.lower() == existingData().username.lower()
+                    || (
+                        existsAfter(/databases/$(database)/documents/usernames/$(incomingData().username.lower()))
+                        && getAfter(/databases/$(database)/documents/usernames/$(incomingData().username.lower())).data.uid == request.auth.uid
+                        && !existsAfter(/databases/$(database)/documents/usernames/$(existingData().username.lower()))
+                    )
+                )
+                && (!('avatar' in incomingData())
+                    || (incomingData().avatar is string && incomingData().avatar.size() <= 500))
+                && (!('firstName' in incomingData())
+                    || (incomingData().firstName is string && incomingData().firstName.size() <= 40))
+                && (!('lastName' in incomingData())
+                    || (incomingData().lastName is string && incomingData().lastName.size() <= 40));
+
+            allow delete: if isOwner(uid)
+                && !existsAfter(/databases/$(database)/documents/usernames/$(existingData().username.lower()));
+        }
+
+        // ---------- supportTickets/{id} ----------
+        // User-submitted support tickets with an embedded chat thread.
+        //
+        //   * Anyone can create a ticket (anon allowed, `userId == null`).
+        //   * The ticket owner (`userId == uid`) can read their own ticket and
+        //     clear their own unread flag.
+        //   * Staff (custom claim `role in ['staff','admin']`) can read every
+        //     ticket, change the lifecycle status, and clear the staff-side
+        //     unread flag.
+        //   * Everything else (counters, notifyStatus, timestamps, email
+        //     success flags) is set by Cloud Functions via the Admin SDK,
+        //     which bypasses these rules.
+        //
+        // Delete is denied outright - we retain tickets for audit.
+        match /supportTickets/{id} {
+
+            allow read: if isStaff()
+                || (isSignedIn() && existingData().userId == request.auth.uid);
+
+            allow create: if incomingData().keys().hasOnly([
+                    'ticketNumber', 'name', 'email', 'category',
+                    'subject', 'message', 'attachments', 'userId',
+                    'lang', 'status', 'priority', 'assignedStaffId', 'assignedStaffName', 'notifyStatus',
+                    'lastMessageAt', 'lastMessageFrom', 'messageCount',
+                    'unreadForUser', 'unreadForStaff', 'createdAt'
+                ])
+                && incomingData().ticketNumber is string
+                && incomingData().ticketNumber.size() > 0
+                && incomingData().ticketNumber.size() <= 40
+                && incomingData().name is string
+                && incomingData().name.size() > 0
+                && incomingData().name.size() <= 80
+                && incomingData().email is string
+                && incomingData().email.size() > 5
+                && incomingData().email.size() <= 254
+                && incomingData().email.matches('^[^@]+@[^@]+[.][^@]+$')
+                && incomingData().category in ['account', 'bug', 'payment', 'tech', 'other']
+                && incomingData().subject is string
+                && incomingData().subject.size() > 0
+                && incomingData().subject.size() <= 200
+                && incomingData().message is string
+                && incomingData().message.size() > 0
+                && incomingData().message.size() <= 5000
+                && incomingData().attachments is list
+                && incomingData().attachments.size() <= 5
+                && incomingData().lang is string
+                && incomingData().lang.size() == 2
+                && incomingData().status == 'open'
+                && incomingData().priority == 'normal'
+                && incomingData().assignedStaffId == null
+                && incomingData().assignedStaffName == ''
+                && incomingData().notifyStatus == 'pending'
+                && incomingData().messageCount == 1
+                && incomingData().unreadForUser == false
+                && incomingData().unreadForStaff == true
+                && incomingData().lastMessageFrom == 'user'
+                && incomingData().lastMessageAt is timestamp
+                && incomingData().createdAt is timestamp
+                && (incomingData().userId == null
+                    || (isSignedIn() && incomingData().userId == request.auth.uid));
+
+            // Owner: may only flip their own unread flag to false.
+            // Staff: may change status + staff-side unread (both in one write).
+            // Any other mutation from the client is denied.
+            allow update: if (
+                isSignedIn()
+                && existingData().userId == request.auth.uid
+                && incomingData().diff(existingData()).affectedKeys().hasOnly(['unreadForUser'])
+                && incomingData().unreadForUser == false
+            ) || (
+                isStaff()
+                && incomingData().diff(existingData()).affectedKeys()
+                    .hasOnly(['status', 'priority', 'assignedStaffId', 'assignedStaffName', 'unreadForStaff'])
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['status'])
+                    || incomingData().status in ['open', 'resolved'])
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['priority'])
+                    || incomingData().priority in ['low', 'normal', 'high', 'urgent'])
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['assignedStaffId', 'assignedStaffName'])
+                    || (
+                        incomingData().assignedStaffId == null
+                        && incomingData().assignedStaffName == ''
+                    ) || (
+                        incomingData().assignedStaffId == request.auth.uid
+                        && incomingData().assignedStaffName is string
+                        && incomingData().assignedStaffName.size() > 0
+                        && incomingData().assignedStaffName.size() <= 80
+                    ))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['unreadForStaff'])
+                    || incomingData().unreadForStaff == false)
+            );
+
+            allow delete: if isStaff();
+
+            match /internalNotes/{noteId} {
+
+                allow read: if isStaff();
+
+                allow create: if isStaff()
+                    && incomingData().keys().hasOnly([
+                        'authorId', 'authorName', 'text', 'createdAt'
+                    ])
+                    && incomingData().authorId == request.auth.uid
+                    && incomingData().authorName is string
+                    && incomingData().authorName.size() > 0
+                    && incomingData().authorName.size() <= 80
+                    && incomingData().text is string
+                    && incomingData().text.size() > 0
+                    && incomingData().text.size() <= 5000
+                    && incomingData().createdAt is timestamp;
+
+                allow update: if false;
+                allow delete: if isStaff();
+            }
+
+            // ---------- supportTickets/{id}/messages/{msgId} ----------
+            // Chat messages. Read access mirrors the parent ticket. Writes
+            // are additionally constrained by role (user vs staff).
+            match /messages/{msgId} {
+
+                function parent() {
+                    return get(/databases/$(database)/documents/supportTickets/$(id)).data;
+                }
+
+                allow read: if isStaff()
+                    || (isSignedIn() && parent().userId == request.auth.uid);
+
+                allow create: if incomingData().keys().hasOnly([
+                        'from', 'authorId', 'authorName', 'text', 'attachments', 'createdAt'
+                    ])
+                    && incomingData().text is string
+                    && incomingData().text.size() <= 5000
+                    && (!('attachments' in incomingData()) || (
+                        incomingData().attachments is list
+                        && incomingData().attachments.size() <= 5
+                    ))
+                    && (incomingData().text.size() > 0 || ('attachments' in incomingData() && incomingData().attachments.size() > 0))
+                    && incomingData().authorName is string
+                    && incomingData().authorName.size() > 0
+                    && incomingData().authorName.size() <= 80
+                    && incomingData().createdAt is timestamp
+                    && (
+                        // Owner replying on their own ticket.
+                        (
+                            isSignedIn()
+                            && parent().userId == request.auth.uid
+                            && (!parent().keys().hasAny(['status']) || parent().status != 'resolved')
+                            && incomingData().from == 'user'
+                            && incomingData().authorId == request.auth.uid
+                        ) || (
+                            // Staff replying on any ticket.
+                            isStaff()
+                            && incomingData().from == 'staff'
+                            && incomingData().authorId == request.auth.uid
+                        )
+                    );
+
+                allow update: if false;
+                allow delete: if isStaff();
+            }
+        }
+
+        // ---------- waitlist/{emailKey} ----------
+        // Pre-release game client waitlist.
+        // Doc id = sanitised lowercase email; body = { email, language, createdAt, source }.
+        // Create-only: no reads (can't enumerate), no updates (duplicates fail
+        // with permission-denied which the client surfaces as "already signed up").
+        match /waitlist/{emailKey} {
+            allow read: if false;
+
+            allow create: if incomingData().keys().hasOnly([
+                    'email', 'language', 'createdAt', 'source'
+                ])
+                && incomingData().email is string
+                && incomingData().email.size() > 5
+                && incomingData().email.size() <= 254
+                && incomingData().email.matches('^[^@]+@[^@]+[.][^@]+$')
+                && incomingData().language is string
+                && incomingData().language.size() == 2
+                && incomingData().createdAt is timestamp
+                && incomingData().source is string
+                && incomingData().source.size() <= 50;
+
+            allow update, delete: if false;
+        }
+
+        // ---------- siteSettings/forum ----------
+        // Lightweight public content flags used by staff to control rollout.
+        match /siteSettings/{settingId} {
+            allow read: if settingId == 'forum';
+
+            allow create, update: if settingId == 'forum'
+                && isStaff()
+                && incomingData().keys().hasOnly(['publicVisible', 'postingEnabled', 'updatedAt', 'updatedBy'])
+                && ('updatedAt' in incomingData())
+                && ('updatedBy' in incomingData())
+                && (('publicVisible' in incomingData()) || ('postingEnabled' in incomingData()))
+                && (!('publicVisible' in incomingData())
+                    || incomingData().publicVisible is bool)
+                && (!('postingEnabled' in incomingData())
+                    || incomingData().postingEnabled is bool)
+                && incomingData().updatedAt is timestamp
+                && incomingData().updatedBy == request.auth.uid;
+
+            allow delete: if false;
+        }
+
+        // ---------- news/{postId} ----------
+        // Editorial content. Public read; staff/admin write.
+        match /news/{postId} {
+            allow read: if true;
+
+            // Staff/admin can create news items with validated shape.
+            allow create: if isStaff()
+                && incomingData().keys().hasOnly([
+                    'title', 'slug', 'category', 'imageUrl', 'excerpt',
+                    'content', 'authorId', 'authorName', 'publishedAt',
+                    'featured', 'tags', 'lang'
+                ])
+                && incomingData().title is string
+                && incomingData().title.size() > 0
+                && incomingData().title.size() <= 200
+                && incomingData().slug is string
+                && incomingData().slug.size() > 0
+                && incomingData().slug.size() <= 200
+                && incomingData().slug.matches('^[a-z0-9-]+$')
+                && incomingData().category in ['general', 'update', 'event', 'maintenance']
+                && incomingData().imageUrl is string
+                && incomingData().imageUrl.size() > 0
+                && incomingData().imageUrl.size() <= 500
+                && incomingData().excerpt is string
+                && incomingData().excerpt.size() > 0
+                && incomingData().excerpt.size() <= 300
+                && incomingData().content is string
+                && incomingData().content.size() > 0
+                && incomingData().content.size() <= 10000
+                && incomingData().authorId == request.auth.uid
+                && incomingData().authorName is string
+                && incomingData().authorName.size() > 0
+                && incomingData().authorName.size() <= 80
+                && incomingData().publishedAt is timestamp
+                && incomingData().featured is bool
+                && incomingData().tags is list
+                && incomingData().tags.size() <= 10
+                && incomingData().lang is string
+                && incomingData().lang.size() == 2;
+
+            // Staff/admin can update most fields, but not author/timestamps.
+            allow update: if isStaff()
+                && incomingData().diff(existingData()).affectedKeys().hasOnly([
+                    'title', 'slug', 'category', 'imageUrl', 'excerpt',
+                    'content', 'featured', 'tags', 'lang'
+                ])
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['title'])
+                    || (
+                        incomingData().title is string
+                        && incomingData().title.size() > 0
+                        && incomingData().title.size() <= 200
+                    ))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['slug'])
+                    || (
+                        incomingData().slug is string
+                        && incomingData().slug.size() > 0
+                        && incomingData().slug.size() <= 200
+                        && incomingData().slug.matches('^[a-z0-9-]+$')
+                    ))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['category'])
+                    || incomingData().category in ['general', 'update', 'event', 'maintenance'])
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['imageUrl'])
+                    || (
+                        incomingData().imageUrl is string
+                        && incomingData().imageUrl.size() > 0
+                        && incomingData().imageUrl.size() <= 500
+                    ))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['excerpt'])
+                    || (
+                        incomingData().excerpt is string
+                        && incomingData().excerpt.size() > 0
+                        && incomingData().excerpt.size() <= 300
+                    ))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['content'])
+                    || (
+                        incomingData().content is string
+                        && incomingData().content.size() > 0
+                        && incomingData().content.size() <= 10000
+                    ))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['featured'])
+                    || incomingData().featured is bool)
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['tags'])
+                    || (
+                        incomingData().tags is list
+                        && incomingData().tags.size() <= 10
+                    ))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['lang'])
+                    || (incomingData().lang is string && incomingData().lang.size() == 2));
+
+            // Only staff/admin can delete news.
+            allow delete: if isStaff();
+        }
+
+        // ---------- forumCategories/{catId} ----------
+        // Static list of forum categories. Read-only from client.
+        match /forumCategories/{catId} {
+            allow read: if true;
+
+            // Allow signed-in users to increment threads/posts counters
+            // and update lastPost when creating threads or replies.
+            allow update: if isSignedIn()
+                && incomingData().diff(existingData()).affectedKeys()
+                    .hasOnly(['threads', 'posts', 'lastPost'])
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['threads'])
+                    || (incomingData().threads is int && incomingData().threads == existingData().threads + 1))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['posts'])
+                    || (incomingData().posts is int && incomingData().posts == existingData().posts + 1))
+                && (!incomingData().diff(existingData()).affectedKeys().hasAny(['lastPost'])
+                    || (incomingData().lastPost is map
+                        && incomingData().lastPost.keys().hasOnly(['title', 'author', 'at'])
+                        && incomingData().lastPost.title is string
+                        && incomingData().lastPost.title.size() > 0
+                        && incomingData().lastPost.title.size() <= 140
+                        && incomingData().lastPost.author is string
+                        && incomingData().lastPost.author.size() > 0
+                        && incomingData().lastPost.author.size() <= 80
+                        && isIsoDateTime(incomingData().lastPost.at)))
+                // Staff can freely update category counters (e.g. on thread/post delete)
+                || isStaff();
+
+            allow create, delete: if false;
+        }
+
+        // ---------- forumThreads/{threadId} ----------
+        // User-created discussion threads.
+        // Shape: { category: string, title: string, authorUid: string,
+        //          authorName: string, createdAt: timestamp, lastActivity: timestamp,
+        //          replies: number, views: number, pinned: bool }
+        match /forumThreads/{threadId} {
+            allow read: if true;
+
+            allow create: if isSignedIn()
+                && forumPostingEnabled()
+                && incomingData().keys().hasOnly([
+                    'categoryId', 'category', 'title', 'content', 'author',
+                    'authorUid', 'replies', 'views', 'lastActivity', 'createdAt', 'pinned'
+                ])
+                && incomingData().categoryId is string
+                && incomingData().categoryId.size() > 0
+                && incomingData().categoryId.size() <= 80
+                && isForumCategoryKey(incomingData().category)
+                && incomingData().title is string
+                && incomingData().title.size() > 0
+                && incomingData().title.size() <= 140
+                && incomingData().content is string
+                && incomingData().content.size() > 0
+                && incomingData().content.size() <= 10000
+                && incomingData().author is string
+                && incomingData().author.size() >= 3
+                && incomingData().author.size() <= 80
+                && forumAuthorMatchesProfile(incomingData().author)
+                && incomingData().authorUid == request.auth.uid
+                && incomingData().replies == 0
+                && incomingData().views == 0
+                && incomingData().pinned == false
+                && isIsoDateTime(incomingData().createdAt)
+                && incomingData().lastActivity == incomingData().createdAt;
+
+            // Allow incrementing views (any signed-in user, one field only)
+            allow update: if (
+                isSignedIn()
+                && incomingData().diff(existingData()).affectedKeys().hasOnly(['views'])
+                && incomingData().views is int
+                && incomingData().views == existingData().views + 1
+                && !exists(/databases/$(database)/documents/forumThreads/$(threadId)/views/$(request.auth.uid))
+                && existsAfter(/databases/$(database)/documents/forumThreads/$(threadId)/views/$(request.auth.uid))
+            ) || (
+                isSignedIn()
+                && forumPostingEnabled()
+                && incomingData().diff(existingData()).affectedKeys().hasOnly(['replies', 'lastActivity', 'lastReplyId'])
+                && incomingData().replies is int
+                && existingData().replies is int
+                && incomingData().replies == existingData().replies + 1
+                && incomingData().lastReplyId is string
+                && incomingData().lastReplyId.size() > 0
+                && incomingData().lastReplyId.size() <= 120
+                && isIsoDateTime(incomingData().lastActivity)
+                && existsAfter(/databases/$(database)/documents/forumThreads/$(threadId)/posts/$(incomingData().lastReplyId))
+                && getAfter(/databases/$(database)/documents/forumThreads/$(threadId)/posts/$(incomingData().lastReplyId)).data.authorUid == request.auth.uid
+                && getAfter(/databases/$(database)/documents/forumThreads/$(threadId)/posts/$(incomingData().lastReplyId)).data.createdAt == incomingData().lastActivity
+            );
+
+            allow delete: if isStaff();
+
+            // ---------- forumThreads/{threadId}/posts/{postId} ----------
+            // Replies inside a thread.
+            match /posts/{postId} {
+                allow read: if true;
+
+                allow create: if isSignedIn()
+                    && forumPostingEnabled()
+                    && incomingData().keys().hasOnly(['author', 'authorUid', 'text', 'createdAt'])
+                    && incomingData().author is string
+                    && incomingData().author.size() >= 3
+                    && incomingData().author.size() <= 80
+                    && forumAuthorMatchesProfile(incomingData().author)
+                    && incomingData().authorUid == request.auth.uid
+                    && incomingData().text is string
+                    && incomingData().text.size() > 0
+                    && incomingData().text.size() <= 5000
+                    && isIsoDateTime(incomingData().createdAt);
+
+                allow update: if false;
+
+                allow delete: if isStaff();
+            }
+
+            // ---------- forumThreads/{threadId}/views/{uid} ----------
+            // Per-user unique thread view marker.
+            match /views/{uid} {
+                allow read: if isStaff();
+
+                allow create: if isSignedIn()
+                    && uid == request.auth.uid
+                    && incomingData().keys().hasOnly(['uid', 'viewedAt'])
+                    && incomingData().uid == request.auth.uid
+                    && isIsoDateTime(incomingData().viewedAt);
+
+                allow update: if false;
+                allow delete: if isStaff();
+            }
+        }
+    }
+}

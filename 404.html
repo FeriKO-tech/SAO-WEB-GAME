@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>404 | Sword Art Online</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Pre-render guard: apply no-anim before first paint. Must run sync. -->
+    <script src="/preload-prefs.js"></script>
+
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/notfound.css">
+</head>
+<body class="page-notfound">
+
+<div class="sao-lang-switcher fixed" id="lang-switcher">
+    <button class="sao-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+        <span id="current-lang">RU</span>
+        <span class="arrow">▼</span>
+    </button>
+    <div class="sao-lang-dropdown" id="lang-dropdown">
+        <a href="#" class="active" data-lang="RU">RU - Русский</a>
+        <a href="#" data-lang="EN">EN - English</a>
+        <a href="#" data-lang="DE">DE - Deutsch</a>
+        <a href="#" data-lang="FR">FR - Français</a>
+        <a href="#" data-lang="PL">PL - Polski</a>
+        <a href="#" data-lang="ES">ES - Español</a>
+        <a href="#" data-lang="CZ">CZ - Čeština</a>
+        <a href="#" data-lang="IT">IT - Italiano</a>
+    </div>
+</div>
+
+<main class="notfound-container">
+    <div class="notfound-code" aria-hidden="true">404</div>
+    <div class="notfound-glitch">
+        <span class="notfound-glitch-layer" aria-hidden="true">404</span>
+        <span class="notfound-glitch-layer" aria-hidden="true">404</span>
+    </div>
+
+    <h1 class="notfound-title" data-i18n="title">Страница не найдена</h1>
+    <p class="notfound-subtitle" data-i18n="subtitle">Эта страница либо ещё не существует, либо исчезла вместе со своим автором.</p>
+
+    <div class="notfound-actions">
+        <a href="index.html" class="notfound-btn notfound-btn--primary" data-i18n="home">Вернуться на главную</a>
+        <a href="javascript:history.back()" class="notfound-btn notfound-btn--ghost" data-i18n="back">← Назад</a>
+    </div>
+</main>
+
+<script type="module" src="/src/pages/notfound.ts"></script>
+</body>
+</html>

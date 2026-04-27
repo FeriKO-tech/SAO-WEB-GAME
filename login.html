@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | Sword Art Online</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Pre-render guard: apply "no-anim" class before first paint so disabled
+         animations don't flash. Kept inline because it must run synchronously
+         before the stylesheet paints. -->
+    <script src="/preload-prefs.js"></script>
+
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/login.css">
+</head>
+<body class="page-auth">
+
+<a href="index.html" class="back-link"><span data-i18n="back">← На главную</span></a>
+
+<div class="sao-lang-switcher fixed" id="lang-switcher">
+    <button class="sao-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+        <span id="current-lang">RU</span>
+        <span class="arrow">▼</span>
+    </button>
+    <div class="sao-lang-dropdown" id="lang-dropdown">
+        <a href="#" class="active" data-lang="RU">RU - Русский</a>
+        <a href="#" data-lang="EN">EN - English</a>
+        <a href="#" data-lang="DE">DE - Deutsch</a>
+        <a href="#" data-lang="FR">FR - Français</a>
+        <a href="#" data-lang="PL">PL - Polski</a>
+        <a href="#" data-lang="ES">ES - Español</a>
+        <a href="#" data-lang="CZ">CZ - Čeština</a>
+        <a href="#" data-lang="IT">IT - Italiano</a>
+    </div>
+</div>
+
+<div class="login-container" id="login-container">
+    <!-- Form view -->
+    <div class="form-view">
+        <div class="logo-block">
+            <div class="logo-icon">SAO</div>
+            <h1 class="form-title" data-i18n="title">Вход</h1>
+            <p class="form-subtitle" data-i18n="subtitle">Добро пожаловать обратно, герой</p>
+        </div>
+
+        <div class="social-buttons">
+            <button type="button" class="social-btn" id="google-btn">
+                <span class="icon" aria-hidden="true">G</span>
+                <span data-i18n="googleButton">Продолжить с Google</span>
+            </button>
+        </div>
+
+        <div class="divider" data-i18n="orContinueWith">Или продолжите через</div>
+
+        <form id="login-form" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="email" data-i18n="loginLabel">Email</label>
+                <input type="email" id="email" class="form-input"
+                       placeholder="Введите email"
+                       data-i18n="loginPh" data-i18n-attr="placeholder"
+                       autocomplete="email" required>
+                <div class="form-error" data-for="email" data-i18n="loginErr">Введите email</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password" data-i18n="passwordLabel">Пароль</label>
+                <input type="password" id="password" class="form-input"
+                       placeholder="Введите пароль"
+                       data-i18n="passwordPh" data-i18n-attr="placeholder"
+                       autocomplete="current-password" required>
+                <div class="form-error" data-for="password" data-i18n="passwordErr">Введите пароль</div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-checkbox">
+                    <input type="checkbox" id="remember" checked>
+                    <span data-i18n="remember">Запомнить меня</span>
+                </label>
+                <button type="button" class="forgot-link" data-i18n="forgot">Забыли пароль?</button>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn" data-i18n="submit">Войти в игру</button>
+
+            <div class="form-footer">
+                <span data-i18n="noAccount">Ещё нет аккаунта?</span>
+                <a href="register.html" data-i18n="registerLink">Зарегистрироваться</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success view -->
+    <div class="success-view" id="success-view">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title" data-i18n="successTitle">С возвращением!</h2>
+        <p class="success-message" data-i18n="successMsg1">Авторизация успешна.</p>
+        <p class="success-message" data-i18n="successMsg2">Переходим в игру...</p>
+        <p class="countdown" id="countdown">3</p>
+    </div>
+</div>
+
+<!-- Forgot-password modal -->
+<div class="modal-backdrop" id="forgot-modal" role="dialog" aria-modal="true" aria-labelledby="forgot-title">
+    <div class="modal">
+        <h3 class="modal-title" id="forgot-title" data-i18n="forgotTitle">Сброс пароля</h3>
+        <p class="modal-body" data-i18n="forgotDesc">
+            Введите email от вашего аккаунта. Мы отправим письмо со ссылкой для сброса пароля.
+        </p>
+        <div class="form-group">
+            <label class="form-label" for="forgot-email" data-i18n="loginLabel">Email</label>
+            <input type="email" id="forgot-email" class="form-input"
+                   placeholder="mail@example.com"
+                   data-i18n="loginPh" data-i18n-attr="placeholder"
+                   autocomplete="email">
+            <div class="form-msg" id="forgot-msg"></div>
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="forgot-cancel" data-i18n="cancel">Отмена</button>
+            <button type="button" class="btn btn-primary" id="forgot-submit" data-i18n="forgotSubmit">Отправить</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" class="sao-toast-container" aria-live="polite"></div>
+
+<script type="module" src="/src/pages/login.ts"></script>
+
+</body>
+</html>

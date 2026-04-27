@@ -1,0 +1,200 @@
+/**
+ * Auth-action page specific styles.
+ *
+ * Layered on top of `login.css` — reuses `.login-container`, `.form-input`,
+ * `.submit-btn`, `.form-group`, `.success-view`, `.success-icon`, password
+ * strength styles, etc. This file only adds what's unique:
+ *   - View switcher (multiple panels in one card)
+ *   - Loading spinner
+ *   - Error state (red icon + two-button actions)
+ *   - "Link" flavour of the submit button (anchor styled as a CTA)
+ */
+
+/* ===== View switcher ===== */
+
+.action-view[hidden] {
+    display: none;
+}
+
+/* ===== Loading spinner ===== */
+
+.auth-spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid rgba(0, 212, 255, 0.15);
+    border-top-color: var(--sao-primary);
+    border-radius: 50%;
+    margin: 8px auto 18px;
+    animation: auth-spin 0.85s linear infinite;
+}
+
+@keyframes auth-spin {
+    to { transform: rotate(360deg); }
+}
+
+.no-anim .auth-spinner {
+    animation: none;
+}
+
+/* ===== Success state override (reuse login's .success-icon / .success-title) ===== */
+
+/* The login's `.success-view` rule is `display: none` unless `.show` is toggled.
+   On this page we use `hidden` attr + `[hidden]` selector, so we need to
+   force the view to render when it's visible. */
+.action-view#view-success,
+.action-view#view-error {
+    display: block;
+    text-align: center;
+    padding: 20px 0 10px;
+}
+
+.action-view#view-success[hidden],
+.action-view#view-error[hidden] {
+    display: none;
+}
+
+.action-view#view-success .success-icon {
+    display: inline-flex;
+    margin-bottom: 18px;
+}
+
+/* ===== Error state ===== */
+
+.error-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ff4e4e, #c52828);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sao-font-display);
+    font-size: 42px;
+    color: #fff;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 24px rgba(197, 40, 40, 0.4);
+    animation: success-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.no-anim .error-icon {
+    animation: none;
+}
+
+.error-title {
+    font-family: var(--sao-font-display);
+    font-size: 22px;
+    color: var(--sao-text);
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.error-message {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.error-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ===== Anchor styled as a CTA button ===== */
+
+.submit-btn.submit-btn--link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin-top: 8px;
+}
+
+.submit-btn.submit-btn--ghost {
+    background: transparent;
+    border: 1px solid var(--sao-accent-15);
+    color: rgba(255, 255, 255, 0.75);
+    box-shadow: none;
+}
+
+.submit-btn.submit-btn--ghost:hover:not(:disabled) {
+    background: var(--sao-accent-05);
+    border-color: var(--sao-border-accent-strong);
+    color: var(--sao-text);
+    transform: translateY(-1px);
+    box-shadow: none;
+}
+
+/* ===== Subtitle with bold email override ===== */
+
+.form-subtitle strong {
+    color: var(--sao-primary);
+    font-weight: 700;
+    word-break: break-all;
+}
+
+/* ===== Match indicator (reuses register.css concept but scoped) ===== */
+
+.match-indicator {
+    font-size: 12px;
+    margin-top: 6px;
+    min-height: 16px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color var(--sao-transition);
+}
+
+.match-indicator.ok {
+    color: #54e38a;
+}
+
+.match-indicator.err {
+    color: var(--sao-danger);
+}
+
+/* ===== Password strength meter (compact clone of register.css) ===== */
+
+.password-strength {
+    margin-top: 8px;
+    display: none;
+}
+
+.password-strength.show {
+    display: block;
+}
+
+.strength-bars {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.strength-bar {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background-color var(--sao-transition);
+}
+
+.strength-bar.active-1 { background: #ff6b6b; }
+.strength-bar.active-2 { background: #ffa63d; }
+.strength-bar.active-3 { background: #ffd84a; }
+.strength-bar.active-4 { background: #54e38a; }
+
+.strength-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    flex-wrap: wrap;
+}
+
+.strength-label-text {
+    font-weight: 600;
+}
+
+.strength-hint {
+    color: rgba(255, 255, 255, 0.4);
+}

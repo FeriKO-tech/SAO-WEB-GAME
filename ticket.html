@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тикет | Sword Art Online</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="/preload-prefs.js"></script>
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/pages/tickets.css">
+</head>
+<body class="page-ticket">
+<a href="my-tickets.html" class="back-link" id="ticket-back-link" data-i18n="chatBack">← Назад</a>
+
+<div class="sao-lang-switcher fixed" id="lang-switcher">
+    <button class="sao-lang-btn" id="lang-btn" type="button" aria-label="Сменить язык" data-i18n="languageSwitcherLabel" data-i18n-attr="aria-label">
+        <span id="current-lang">RU</span>
+        <span class="arrow">▼</span>
+    </button>
+    <div class="sao-lang-dropdown" id="lang-dropdown">
+        <a href="#" class="active" data-lang="RU">RU - Русский</a>
+        <a href="#" data-lang="EN">EN - English</a>
+        <a href="#" data-lang="DE">DE - Deutsch</a>
+        <a href="#" data-lang="FR">FR - Français</a>
+        <a href="#" data-lang="PL">PL - Polski</a>
+        <a href="#" data-lang="ES">ES - Español</a>
+        <a href="#" data-lang="CZ">CZ - Čeština</a>
+        <a href="#" data-lang="IT">IT - Italiano</a>
+    </div>
+</div>
+
+<main class="chat-wrapper">
+    <div id="ticket-state" class="chat-state" data-i18n="chatLoading">Загрузка...</div>
+
+    <section id="ticket-screen" hidden>
+        <header class="chat-top">
+            <div class="chat-top-info">
+                <div id="ticket-subject" class="chat-top-subject"></div>
+                <div id="ticket-number" class="chat-top-number"></div>
+                <div id="ticket-requester" class="chat-top-requester" hidden>
+                    <div id="ticket-requester-primary" class="chat-top-requester-primary"></div>
+                    <div id="ticket-requester-secondary" class="chat-top-requester-secondary"></div>
+                </div>
+            </div>
+            <div class="chat-top-actions">
+                <div class="ticket-priority-control">
+                    <span class="ticket-priority-label" data-i18n="priorityLabel">Приоритет</span>
+                    <span id="ticket-priority-badge" class="priority-badge priority-badge--normal"></span>
+                    <select id="ticket-priority-select" class="form-select ticket-priority-select" hidden></select>
+                </div>
+                <div id="ticket-assignment" class="ticket-assignment-control" hidden>
+                    <span class="ticket-assignment-label" data-i18n="assignmentLabel">Назначение</span>
+                    <span id="ticket-assignment-value" class="ticket-assignment-value"></span>
+                    <div class="ticket-assignment-actions">
+                        <button id="ticket-assign-self-btn" type="button" class="btn btn-secondary btn-sm" hidden></button>
+                        <button id="ticket-unassign-btn" type="button" class="btn btn-secondary btn-sm" hidden></button>
+                    </div>
+                </div>
+                <span id="ticket-status" class="status-badge status-badge--open"></span>
+                <button id="ticket-toggle-status" type="button" class="btn btn-secondary btn-sm" hidden></button>
+                <button id="ticket-delete-btn" type="button" class="btn btn-danger btn-sm" hidden data-i18n="deleteTicket">Удалить тикет</button>
+            </div>
+        </header>
+
+        <div id="ticket-messages" class="chat-messages" aria-live="polite"></div>
+
+        <section id="ticket-internal-notes" class="ticket-notes" hidden>
+            <div class="ticket-notes-header">
+                <h2 class="ticket-notes-title" data-i18n="internalNotesTitle">Внутренние заметки</h2>
+            </div>
+            <div id="ticket-notes-list" class="ticket-notes-list" aria-live="polite"></div>
+            <form id="ticket-note-form" class="ticket-note-form">
+                <textarea
+                    id="ticket-note-input"
+                    class="ticket-note-input"
+                    rows="2"
+                    maxlength="5000"
+                    data-i18n="internalNotesPlaceholder"
+                    data-i18n-attr="placeholder"
+                    placeholder="Добавьте заметку для команды..."
+                ></textarea>
+                <button id="ticket-note-submit" type="submit" class="btn btn-secondary btn-sm" data-i18n="internalNotesAdd">Добавить заметку</button>
+            </form>
+        </section>
+
+        <div id="ticket-status-bar" class="chat-status-bar" hidden>
+            <span data-i18n="chatClosed">Тикет закрыт.</span>
+        </div>
+
+        <form id="ticket-reply-form" class="chat-reply">
+            <div class="chat-reply-attachments" id="ticket-attachments-list" hidden></div>
+            <div class="chat-reply-input-wrapper">
+                <textarea id="ticket-reply-input" class="chat-reply-input" rows="2" maxlength="5000" data-i18n="chatPlaceholder" data-i18n-attr="placeholder" placeholder="Напишите сообщение..."></textarea>
+                <div class="chat-reply-actions">
+                    <div class="chat-reply-tools">
+                        <label for="ticket-file-input" class="chat-reply-tool-btn" aria-label="Прикрепить файл">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                        </label>
+                        <input type="file" id="ticket-file-input" multiple hidden>
+                    </div>
+                    <button id="ticket-send-btn" type="submit" class="btn btn-primary" data-i18n="chatSend">Отправить</button>
+                </div>
+            </div>
+        </form>
+    </section>
+</main>
+
+<script type="module" src="/src/pages/ticket.ts"></script>
+</body>
+</html>
