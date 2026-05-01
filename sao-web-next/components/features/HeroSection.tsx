@@ -16,7 +16,7 @@ export function HeroSection() {
   const handleEnter = () => {
     setIsPlaying(true);
     if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
     }
   };
 
@@ -32,7 +32,7 @@ export function HeroSection() {
     <>
       <EntryOverlay onEnter={handleEnter} />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
-      
+
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
         {/* Background Video */}
         <div className="absolute inset-0 z-0 bg-black">
@@ -63,10 +63,10 @@ export function HeroSection() {
             <Button size="lg" className="text-lg px-8 py-6 h-auto" onClick={() => setIsWaitlistOpen(true)}>
               {t("playNow")}
             </Button>
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6 h-auto" asChild>
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-6 h-auto">
               <Link href="/news">{t("news")}</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 h-auto bg-background/50 backdrop-blur-sm" asChild>
+            <Button size="lg" variant="outline" className="text-lg px-8 py-6 h-auto bg-background/50 backdrop-blur-sm">
               <Link href="/forum">{t("forum")}</Link>
             </Button>
           </div>
