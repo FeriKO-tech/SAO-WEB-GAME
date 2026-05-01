@@ -82,6 +82,22 @@
     "errorWrongPassword": "Wrong email or password",
     "errorAccountNotFound": "No account found with this email",
     "errorTooManyRequests": "Too many attempts. Try again in a few minutes.",
-    "errorUnknown": "Unknown error. Please try again later."
+    "errorUnknown": "Unknown error. Please try again later.",
+    "forgotTitle": "Reset Password",
+    "forgotDesc": "Enter your email address and we will send you a password reset link.",
+    "forgotSubmit": "Send Reset Link",
+    "forgotSuccess": "If your email is registered, you will receive a reset link shortly.",
+    "actionTitle": "Authentication",
+    "actionVerify": "Verifying your email...",
+    "actionVerifySuccess": "Email verified successfully! You can now log in.",
+    "actionReset": "Resetting password...",
+    "actionResetTitle": "Create New Password",
+    "actionResetDesc": "Enter your new password below.",
+    "actionResetSubmit": "Save New Password",
+    "actionResetSuccess": "Password changed successfully! You can now log in.",
+    "actionRecover": "Recovering email...",
+    "actionRecoverSuccess": "Email recovered successfully.",
+    "actionInvalid": "Invalid link or it has expired.",
+    "backToLogin": "Back to Log In"
   }
 }
