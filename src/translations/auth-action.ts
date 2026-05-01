@@ -464,4 +464,53 @@ export const authActionTranslations: LanguageMap<AuthActionDict> = {
         toLogin: 'Accedi',
         toHome: 'Home',
     },
+
+    UA: {
+        loadingTitle: 'Перевірка посилання',
+        loadingSub: 'Зачекайте секунду…',
+
+        resetTitle: 'Новий пароль',
+        resetSub: 'Для акаунту',
+        passwordLabel: 'Новий пароль',
+        passwordPh: 'Мінімум 6 символів',
+        passwordErr: 'Пароль має бути мінімум 6 символів',
+        confirmLabel: 'Повторіть пароль',
+        confirmPh: 'Повторіть пароль',
+        confirmErr: 'Паролі не співпадають',
+        matchOk: '✓ Паролі співпадають',
+        matchFail: '✗ Паролі не співпадають',
+        strength: ['Дуже слабкий', 'Слабкий', 'Середній', 'Надійний'],
+        strengthHints: {
+            tooShort: 'мінімум 6 символів',
+            noCase: 'додайте великі літери',
+            noNumber: 'додайте цифри',
+            noSpecial: 'додайте спецсимволи',
+            tooShort10: 'довше 10 символів - надійніше',
+            great: 'відмінний пароль!',
+        },
+        resetSubmit: 'Змінити пароль',
+        resetSubmitting: 'Збереження…',
+
+        resetSuccessTitle: 'Пароль змінено',
+        resetSuccessMsg: 'Тепер можна увійти з новим паролем.',
+        verifyTitle: 'Email підтверджено',
+        verifySuccessMsg: 'Дякуємо - ваш email успішно підтверджено.',
+        recoverTitle: 'Зміну email скасовано',
+        recoverSuccessMsg: (email) =>
+            `Адресу ${email} відновлено. Рекомендуємо одразу змінити пароль - можливо, ваш акаунт було скомпрометовано.`,
+
+        errorTitle: 'Посилання недійсне',
+        errorInvalid: 'Посилання пошкоджено або вже було використано. Запросіть нове.',
+        errorExpired: 'Термін дії посилання закінчився. Запросіть нове.',
+        errorUserDisabled: 'Цей акаунт заблоковано.',
+        errorUserNotFound: 'Акаунт не знайдено - можливо, його було видалено.',
+        errorWeakPassword: 'Пароль занадто простий. Мінімум 6 символів.',
+        errorNetwork: 'Помилка мережі - перевірте підключення і спробуйте знову.',
+        errorUnknown: 'Щось пішло не так. Спробуйте пізніше.',
+        errorUnknownMode: 'Невідомий тип дії. Перевірте посилання з листа.',
+        errorMissingCode: 'У посиланні не вистачає даних. Відкрийте його знову з листа.',
+
+        toLogin: 'Увійти в гру',
+        toHome: 'На головну',
+    },
 };

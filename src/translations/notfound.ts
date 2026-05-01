@@ -63,4 +63,11 @@ export const notFoundTranslations: LanguageMap<NotFoundDict> = {
         home: 'Torna alla home',
         back: '← Indietro',
     },
+
+    UA: {
+        title: 'Сторінку не знайдено',
+        subtitle: 'Ця сторінка ще не існує або зникла разом із своїм автором.',
+        home: 'Повернутися на головну',
+        back: '← Назад',
+    },
 };

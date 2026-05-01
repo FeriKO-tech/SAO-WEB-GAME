@@ -72,10 +72,10 @@ export interface SupportAttachment {
 /**
  * Supported UI languages. Add new codes here when expanding.
  */
-export type Language = 'RU' | 'EN' | 'DE' | 'FR' | 'PL' | 'ES' | 'CZ' | 'IT';
+export type Language = 'RU' | 'EN' | 'DE' | 'FR' | 'PL' | 'ES' | 'CZ' | 'IT' | 'UA';
 
 export const SUPPORTED_LANGUAGES: readonly Language[] = [
-    'RU', 'EN', 'DE', 'FR', 'PL', 'ES', 'CZ', 'IT',
+    'RU', 'EN', 'DE', 'FR', 'PL', 'ES', 'CZ', 'IT', 'UA',
 ] as const;
 
 export const DEFAULT_LANGUAGE: Language = 'RU';

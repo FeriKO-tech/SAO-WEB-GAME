@@ -73,6 +73,7 @@ const LANGUAGE_TO_BCP47: Record<Language, string> = {
     ES: 'es',
     CZ: 'cs', // ISO-639-1 for Czech
     IT: 'it',
+    UA: 'uk',
 };
 
 /**

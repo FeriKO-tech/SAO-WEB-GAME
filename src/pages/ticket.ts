@@ -91,6 +91,7 @@ const LOCALE_MAP = {
     ES: 'es-ES',
     CZ: 'cs-CZ',
     IT: 'it-IT',
+    UA: 'uk-UA',
 } as const;
 
 let isStaff = false;

@@ -680,4 +680,77 @@ export const settingsTranslations: LanguageMap<SettingsDict> = {
             unknownError: "Qualcosa è andato storto. Riprova più tardi.",
         },
     },
+
+    UA: {
+        title: 'Налаштування',
+        tabProfile: 'Профіль',
+        tabSecurity: 'Безпека',
+        tabPrefs: 'Переваги',
+        tabAccount: 'Акаунт',
+
+        profileTitle: 'Профіль',
+        profileDesc: 'Керуйте своїми публічними даними в грі.',
+        usernameLabel: 'Логін',
+        firstNameLabel: 'Ім\'я',
+        lastNameLabel: 'Прізвище',
+        emailLabel: 'Email',
+        saveChanges: 'Зберегти зміни',
+
+        securityTitle: 'Безпека',
+        securityDesc: 'Змініть пароль, щоб захистити акаунт.',
+        currentPwLabel: 'Поточний пароль',
+        newPwLabel: 'Новий пароль',
+        newPwHint: 'Мінімум 6 символів',
+        confirmPwLabel: 'Повторіть новий пароль',
+        changePwBtn: 'Змінити пароль',
+        googleAuthTitle: 'Ви увійшли через Google',
+        googleAuthDesc:
+            'Пароль керується через ваш Google-акаунт. Щоб змінити його, перейдіть в налаштування безпеки Google.',
+        googleSecurityBtn: 'Безпека Google →',
+
+        prefsTitle: 'Переваги',
+        prefsDesc: 'Налаштуйте інтерфейс та поведінку гри під себе.',
+        soundLabel: 'Звук у грі',
+        soundSub: 'Фонова музика та ефекти',
+        animLabel: 'Анімації інтерфейсу',
+        animSub: 'Вимкніть для слабких пристроїв',
+
+        accountTitle: 'Акаунт',
+        accountDesc: 'Керування сесією та акаунтом.',
+        logoutBtn: 'Вийти з акаунту',
+        dangerTitle: 'Небезпечна зона',
+        dangerDesc:
+            'Видалення акаунту незворотнє. Всі ваші дані, прогрес та покупки будуть безповоротно втрачені.',
+        deleteAccountBtn: 'Видалити акаунт',
+
+        deleteTitle: 'Видалити акаунт?',
+        deleteWarn:
+            'Ця дія незворотна. Весь ваш прогрес, інвентар та досягнення будуть безповоротно видалені.',
+        deleteConfirmLabel: 'Для підтвердження введіть свій логін',
+        deleteBtn: 'Видалити назавжди',
+
+        emailChangeTitle: 'Підтвердьте зміну email',
+        emailChangeDesc: 'Ми надішлемо лист на нову адресу. Email зміниться тільки після кліку по посиланню в листі. Підтвердьте поточний пароль, щоб продовжити.',
+        emailChangeSubmit: 'Надіслати лист',
+
+        msg: {
+            usernameShort: 'Логін має бути від 3 до 20 символів',
+            usernameTaken: 'Цей логін вже зайнятий',
+            emailBad: 'Некоректний email',
+            emailTaken: 'Цей email вже зареєстрований',
+            profileSaved: 'Профіль успішно оновлено',
+            pwCurrentWrong: 'Невірний поточний пароль',
+            pwShort: 'Новий пароль занадто короткий',
+            pwMismatch: 'Нові паролі не співпадають',
+            pwChanged: 'Пароль успішно змінено',
+            pwTooManyRequests: 'Забагато спроб. Спробуйте через кілька хвилин.',
+            accountDeleted: 'Акаунт видалено',
+            reauthRequired: 'Для видалення акаунту увійдіть знову',
+            loggedOut: 'Ви вийшли з акаунту',
+            googleEditBlocked: 'Цей параметр не можна змінити для Google-акаунту',
+            currentPwRequired: 'Введіть поточний пароль',
+            emailChangeSent: 'Лист із підтвердженням надіслано на нову адресу. Клікніть посилання в листі, щоб завершити зміну email.',
+            unknownError: 'Щось пішло не так. Спробуйте пізніше.',
+        },
+    },
 };

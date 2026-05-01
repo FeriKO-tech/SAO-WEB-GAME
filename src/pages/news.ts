@@ -83,6 +83,7 @@ const LOCALE_MAP: Record<Language, string> = {
     ES: 'es-ES',
     CZ: 'cs-CZ',
     IT: 'it-IT',
+    UA: 'uk-UA',
 };
 
 function formatDate(iso: string, lang: Language): string {
