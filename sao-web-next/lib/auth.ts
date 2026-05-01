@@ -54,7 +54,7 @@ import {
     type Timestamp,
 } from 'firebase/firestore';
 
-import type { Language, User } from '@models/user';
+import type { Language, User } from '../models/user'
 import { auth, db } from './firebase';
 import { getCurrentLanguage } from './i18n';
 import { getCurrentUser, setCurrentUser, clearCurrentUser } from './storage';
@@ -65,15 +65,15 @@ import { getCurrentUser, setCurrentUser, clearCurrentUser } from './storage';
  * template for silently falls back to English on their side.
  */
 const LANGUAGE_TO_BCP47: Record<Language, string> = {
-    RU: 'ru',
-    EN: 'en',
-    DE: 'de',
-    FR: 'fr',
-    PL: 'pl',
-    ES: 'es',
-    CZ: 'cs', // ISO-639-1 for Czech
-    IT: 'it',
-    UA: 'uk',
+    ru: 'ru',
+    en: 'en',
+    de: 'de',
+    fr: 'fr',
+    pl: 'pl',
+    es: 'es',
+    cz: 'cz',
+    it: 'it',
+    ua: 'ua',
 };
 
 /**
@@ -327,7 +327,7 @@ export async function signUp(
     username: string,
     email: string,
     password: string,
-    language: Language = 'RU',
+    language: Language = 'ru',
 ): Promise<User> {
     const usernameLower = username.trim().toLowerCase();
 
