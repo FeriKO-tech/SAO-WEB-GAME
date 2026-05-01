@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import '@/app/globals.css';
 import { Toaster } from '@/components/ui/sonner';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: 'Sword Art Online | MMORPG',
@@ -38,6 +39,7 @@ export default async function LocaleLayout({
           {children}
           <Toaster />
         </NextIntlClientProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
