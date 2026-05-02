@@ -9,7 +9,10 @@ import {
   Ticket, 
   TicketMessage,
   markTicketReadForUser,
-  sendUserMessage
+  sendUserMessage,
+  sendStaffMessage,
+  hasStaffRole,
+  markTicketReadForStaff
 } from "@/lib/tickets";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -45,10 +48,17 @@ export default function TicketChatPage({
   const [messages, setMessages] = useState<TicketMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState<'loading' | 'ready' | 'notfound' | 'forbidden'>('loading');
+  const [isStaff, setIsStaff] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (user) {
+      hasStaffRole().then(setIsStaff);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -71,20 +81,23 @@ export default function TicketChatPage({
         }
 
         // Only staff or ticket owner can view
-        if (data.userId !== user.uid) {
-          // Add staff check later if needed, but for now we assume this is user view
-          setStatus('forbidden');
+        hasStaffRole().then((staff) => {
+          if (!staff && data.userId !== user.uid) {
+            setStatus('forbidden');
+            setLoading(false);
+            return;
+          }
+
+          setTicket(data);
+          setStatus('ready');
           setLoading(false);
-          return;
-        }
 
-        setTicket(data);
-        setStatus('ready');
-        setLoading(false);
-
-        if (data.unreadForUser) {
-          markTicketReadForUser(id);
-        }
+          if (data.unreadForUser && !staff && data.userId === user.uid) {
+            markTicketReadForUser(id);
+          } else if (data.unreadForStaff && staff) {
+            markTicketReadForStaff(id);
+          }
+        });
 
         if (!msgUnsub) {
           msgUnsub = subscribeToTicketMessages(
@@ -156,7 +169,10 @@ export default function TicketChatPage({
 
     setIsSending(true);
     try {
-      const result = await sendUserMessage(id, newMessage);
+      const result = isStaff 
+        ? await sendStaffMessage(id, newMessage)
+        : await sendUserMessage(id, newMessage);
+        
       if (result.ok) {
         setNewMessage("");
       } else {
@@ -186,7 +202,7 @@ export default function TicketChatPage({
         {/* Header */}
         <div className="flex-shrink-0 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card/50 backdrop-blur-md p-4 rounded-xl border border-border/50">
           <div className="flex items-center gap-4">
-            <Link href={`/${locale}/my-tickets`} className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground">
+            <Link href={`/${locale}/${isStaff ? 'admin-tickets' : 'my-tickets'}`} className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground">
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div>
