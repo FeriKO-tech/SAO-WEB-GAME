@@ -244,5 +244,16 @@
     "categoryTech": "Технический",
     "categoryOther": "Другое",
     "timeAgo": "сейчас"
+  },
+  "Nav": {
+    "discord": "Discord",
+    "forum": "Форум",
+    "support": "Поддержка",
+    "news": "Новости",
+    "login": "Войти",
+    "myTickets": "Мои тикеты",
+    "adminTickets": "Тикеты поддержки",
+    "settings": "Настройки",
+    "logout": "Выйти"
   }
 }

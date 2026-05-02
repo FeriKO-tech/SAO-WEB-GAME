@@ -244,5 +244,16 @@
     "categoryTech": "Technical",
     "categoryOther": "Other",
     "timeAgo": "now"
+  },
+  "Nav": {
+    "discord": "Discord",
+    "forum": "Forum",
+    "support": "Support",
+    "news": "News",
+    "login": "Login",
+    "myTickets": "My Tickets",
+    "adminTickets": "Support Inbox",
+    "settings": "Settings",
+    "logout": "Logout"
   }
 }

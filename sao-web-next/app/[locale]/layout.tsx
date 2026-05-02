@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import '@/app/globals.css';
 import { Toaster } from '@/components/ui/sonner';
+import { Navbar } from '@/components/layout/Navbar';
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: 'Sword Art Online | MMORPG',
@@ -20,7 +22,7 @@ export default async function LocaleLayout({
   params
 }: {
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
 
@@ -35,10 +37,13 @@ export default async function LocaleLayout({
     <html lang={locale} className="dark">
       <body className="antialiased min-h-screen bg-background text-foreground">
         <NextIntlClientProvider messages={messages}>
+          <Navbar />
           {children}
           <Toaster />
         </NextIntlClientProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
 }
+
