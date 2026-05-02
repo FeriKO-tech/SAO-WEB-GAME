@@ -60,15 +60,15 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Button size="lg" className="text-lg px-8 py-6 h-auto" onClick={() => setIsWaitlistOpen(true)}>
-              {t("playNow")}
-            </Button>
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6 h-auto">
-              <Link href="/news">{t("news")}</Link>
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 h-auto bg-background/50 backdrop-blur-sm">
-              <Link href="/forum">{t("forum")}</Link>
-            </Button>
+            <button className="hero-btn-play" onClick={() => setIsWaitlistOpen(true)}>
+              ► {t("playNow")}
+            </button>
+            <Link href="/news" className="hero-btn-secondary">
+              {t("news")}
+            </Link>
+            <Link href="/forum" className="hero-btn-secondary">
+              {t("forum")}
+            </Link>
           </div>
         </div>
 
