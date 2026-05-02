@@ -84,7 +84,11 @@ export function WaitlistModal({
           <>
             <DialogHeader>
               <DialogTitle>{t("waitlistTitle")}</DialogTitle>
-              <DialogDescription dangerouslySetInnerHTML={{ __html: t("waitlistDesc") }} />
+              <DialogDescription>
+                {t.rich("waitlistDesc", {
+                  strong: (chunks) => <strong>{chunks}</strong>
+                })}
+              </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">

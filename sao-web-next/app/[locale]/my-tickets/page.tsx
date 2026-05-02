@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/useAuth";
 import { subscribeToUserTickets, Ticket } from "@/lib/tickets";
@@ -22,7 +22,8 @@ const locales: Record<string, any> = {
   ua: uk,
 };
 
-export default function MyTicketsPage({ params: { locale } }: { params: { locale: string } }) {
+export default function MyTicketsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = use(params);
   const t = useTranslations("Tickets");
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();

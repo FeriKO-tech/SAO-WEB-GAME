@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, use } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/useAuth";
 import { subscribeToAllTickets, Ticket, hasStaffRole } from "@/lib/tickets";
@@ -27,7 +27,8 @@ const locales: Record<string, any> = {
 
 type FilterType = 'all' | 'open' | 'resolved';
 
-export default function AdminTicketsPage({ params: { locale } }: { params: { locale: string } }) {
+export default function AdminTicketsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = use(params);
   const t = useTranslations("Tickets");
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
@@ -171,7 +172,7 @@ export default function AdminTicketsPage({ params: { locale } }: { params: { loc
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  {f === 'all' ? t("adminFilterAll") : f === 'open' ? t("adminFilterOpen") : t("adminFilterResolved")}
+                  {f === 'all' ? t("filterAll") : f === 'open' ? t("filterOpen") : t("filterResolved")}
                   <span className="ml-2 opacity-50">
                     {f === 'all' ? counts.total : f === 'open' ? counts.open : counts.resolved}
                   </span>
@@ -198,7 +199,7 @@ export default function AdminTicketsPage({ params: { locale } }: { params: { loc
                 onCheckedChange={setUnreadOnly}
               />
               <Label htmlFor="unread-only" className="cursor-pointer">
-                {t("adminUnreadOnly")}
+                {t("filterUnreadOnly")}
               </Label>
               {counts.unread > 0 && (
                 <span className="ml-1 bg-primary/20 text-primary px-2 py-0.5 rounded-full text-xs font-bold">
