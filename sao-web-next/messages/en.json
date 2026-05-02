@@ -99,5 +99,85 @@
     "actionRecoverSuccess": "Email recovered successfully.",
     "actionInvalid": "Invalid link or it has expired.",
     "backToLogin": "Back to Log In"
+  },
+  "Support": {
+    "title": "Support",
+    "subtitle": "We are here to help. Find your answer in the FAQ, contact us directly, or submit a ticket using the form below.",
+    "quickTitle": "Quick contact",
+    "quickDesc": "Choose a convenient way to reach us.",
+    "quickEmail": "Email",
+    "quickEmailDesc": "We respond within 24 hours",
+    "quickDiscord": "Discord",
+    "quickDiscordDesc": "Active community and support",
+    "quickFaq": "Knowledge base",
+    "quickFaqDesc": "Answers to popular questions",
+    "quickFaqLink": "Go to FAQ",
+    "faqTitle": "Frequently asked questions",
+    "faqDesc": "Your answer might already be here.",
+    "faq": [
+      {
+        "q": "How do I reset my password?",
+        "a": "On the login page click \"Forgot password?\" and enter the email you used to register. We will send you a reset link. If you signed in via Google - manage your password in your Google account settings."
+      },
+      {
+        "q": "Can I change my username and email after registration?",
+        "a": "Yes. Go to <a href=\"settings.html\">Settings → Profile</a> and edit the fields. Username must be 3–20 characters and unique. Email must be valid and not already taken."
+      },
+      {
+        "q": "How do I delete my account?",
+        "a": "In <a href=\"settings.html\">Settings → Account</a> there is a \"Danger zone\" section. Click \"Delete account\", type your username to confirm - the action is irreversible, all progress and purchases will be lost."
+      },
+      {
+        "q": "Are mobile devices supported?",
+        "a": "Yes. The site and game are adapted for phones and tablets. Recommended browsers: Chrome, Safari, Firefox, Edge - latest versions. On older devices disable animations in Settings → Preferences to improve performance."
+      },
+      {
+        "q": "I signed in with Google - what about the password?",
+        "a": "When signing in with Google, no separate password is created on our site. You can only log in via Google. To change your Google password, go to <a href=\"https://myaccount.google.com/security\" target=\"_blank\" rel=\"noopener\">Google security settings</a>."
+      },
+      {
+        "q": "How do I report a bug?",
+        "a": "Submit a ticket via the form below with the \"Bug / Error\" category. Include: what you did, what you expected, what happened, browser and OS, attach screenshots or video if possible. This speeds up investigation."
+      },
+      {
+        "q": "Can I play on multiple devices?",
+        "a": "Yes. Your progress is tied to your account and syncs between devices. Just log in with the same credentials from any browser. Simultaneous game sessions from one account are not allowed - the older one will be logged out."
+      },
+      {
+        "q": "I paid for a donation but did not get the reward - what should I do?",
+        "a": "Purchases are usually credited instantly. If nothing arrived within 15 minutes - submit a ticket with category \"Payment / Donations\", attach a screenshot or transaction ID. We will refund or grant the purchase manually."
+      }
+    ],
+    "formTitle": "Contact form",
+    "formDesc": "Describe the problem in detail and we will help.",
+    "formName": "Your name",
+    "formEmail": "Reply email",
+    "formCategory": "Category",
+    "catAccount": "Account",
+    "catBug": "Bug / Error",
+    "catPayment": "Payment / Donations",
+    "catTech": "Technical issues",
+    "catOther": "Other",
+    "formSubject": "Subject",
+    "formMessage": "Message",
+    "formMessageHint": "Minimum 20 characters. Describe steps to reproduce, browser, time of event.",
+    "formSubmit": "Submit ticket",
+    "formSubmitting": "Sending...",
+    "formAttach": "Attach files",
+    "attachText": "Drag files here or ",
+    "attachBrowse": "browse",
+    "attachHint": "PNG, JPG, PDF, TXT, LOG · MP4, WEBM, MOV · up to 5 MB (images/docs) and 20 MB (video) · max 5 files",
+    "attachTooBig": "✗ File \"{filename}\" is too large (5 MB for images/docs, 20 MB for video)",
+    "attachBadType": "✗ File format \"{filename}\" is not supported",
+    "attachTooMany": "✗ Maximum 5 files",
+    "nameEmpty": "✗ Enter your name",
+    "emailBad": "✗ Invalid email",
+    "subjectEmpty": "✗ Enter a subject",
+    "subjectShort": "✗ Subject is too short (minimum 3 characters)",
+    "messageEmpty": "✗ Write a message",
+    "messageShort": "✗ Message is too short (minimum 20 characters)",
+    "successMsg": "✓ Ticket submitted! We will respond within 24 hours.",
+    "ticketErrNetwork": "Network is unavailable. Please try again in a minute.",
+    "ticketErrGeneric": "Could not submit the ticket. Please double-check and try again."
   }
 }
