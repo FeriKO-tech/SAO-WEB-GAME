@@ -14,7 +14,7 @@ export default async function NewsPage(props: PageProps) {
   const posts = await getNewsPosts(params.locale);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 pt-24 px-4">
       <div className="flex flex-col gap-6">
         <header className="mb-8">
           <h1 className="text-4xl font-bold font-heading mb-2">{t('title')}</h1>

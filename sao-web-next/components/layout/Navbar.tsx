@@ -106,6 +106,9 @@ export function Navbar() {
           >
             {t("discord")}
           </a>
+          <Link href={`/${locale}/news`} className="navbar-link">
+            {t("news")}
+          </Link>
           <Link href={`/${locale}/forum`} className="navbar-link">
             {t("forum")}
           </Link>
@@ -223,6 +226,13 @@ export function Navbar() {
           >
             {t("discord")}
           </a>
+          <Link
+            href={`/${locale}/news`}
+            className="navbar-mobile-link"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            {t("news")}
+          </Link>
           <Link
             href={`/${locale}/forum`}
             className="navbar-mobile-link"

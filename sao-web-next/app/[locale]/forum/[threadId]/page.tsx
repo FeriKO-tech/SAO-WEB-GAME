@@ -42,7 +42,7 @@ export default async function ThreadPage(props: PageProps) {
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 pt-24 px-4">
       <ThreadView 
         thread={thread} 
         initialPosts={posts} 

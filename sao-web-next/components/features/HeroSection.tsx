@@ -63,12 +63,6 @@ export function HeroSection() {
             <button className="hero-btn-play" onClick={() => setIsWaitlistOpen(true)}>
               ► {t("playNow")}
             </button>
-            <Link href="/news" className="hero-btn-secondary">
-              {t("news")}
-            </Link>
-            <Link href="/forum" className="hero-btn-secondary">
-              {t("forum")}
-            </Link>
           </div>
         </div>
 
