@@ -67,7 +67,7 @@ export default async function NewsArticlePage(props: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="container max-w-4xl mx-auto py-8 px-4 sm:px-6">
+      <article className="container max-w-4xl mx-auto py-8 pt-24 px-4 sm:px-6">
         <Link href="/news" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors">
           <ArrowLeft size={16} />
           {t('back', { defaultMessage: 'Back to News' })}
